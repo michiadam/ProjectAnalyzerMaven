@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+  <script src="https://unpkg.com/gojs@2.2.5/release/go.js"></script>
+  <p>
+    This is a minimalist HTML and JavaScript skeleton of the GoJS Sample
+    <a href="https://gojs.net/latest/samples/umlClass.html">umlClass.html</a>. It was automatically generated from a
+    button on the sample page,
+    and does not contain the full HTML. It is intended as a starting point to adapt for your own usage.
+    For many samples, you may need to inspect the
+    <a href="https://github.com/NorthwoodsSoftware/GoJS/blob/master/samples/umlClass.html">full source on Github</a>
+    and copy other files or scripts.
+  </p>
+  <div id="allSampleContent" class="p-4 w-full">
+
+    <script id="data">
+      const exampleData = JSON.parse(`{"packages":[{"packageName":"src/main.java.at.michaeladam","classes":[{"simpleName":"AnnotationData","annotations":[{"name":"Data"}],"interfaces":[],"imports":["com.github.javaparser.ast.NodeList","com.github.javaparser.ast.expr.AnnotationExpr","lombok.Data"],"fields":[{"name":"name","type":{"type":"String","generic":null},"modifier":["private"]}],"methods":[{"name":"of","returnType":"AnnotationData[]","modifier":["public","static"],"parameter":["NodeList<AnnotationExpr> annotations"]}],"type":"class","parent":null,"childrenClasses":[]},{"simpleName":"Blabla","annotations":[],"interfaces":[],"imports":[],"fields":[],"methods":[],"type":"class","parent":null,"childrenClasses":[]},{"simpleName":"ClassData","annotations":[{"name":"Data"}],"interfaces":[],"imports":["com.github.javaparser.ast.CompilationUnit","com.github.javaparser.ast.ImportDeclaration","com.github.javaparser.ast.Node","com.github.javaparser.ast.NodeList","com.github.javaparser.ast.body.BodyDeclaration","com.github.javaparser.ast.body.ClassOrInterfaceDeclaration","lombok.Data","java.util.Optional","java.util.stream.Collectors"],"fields":[{"name":"simpleName","type":{"type":"String","generic":null},"modifier":["public"]},{"name":"annotations","type":{"type":"AnnotationData","generic":null},"modifier":["public"]},{"name":"interfaces","type":{"type":"String","generic":null},"modifier":["public"]},{"name":"imports","type":{"type":"String","generic":null},"modifier":["public"]},{"name":"fields","type":{"type":"FieldData","generic":null},"modifier":["public"]},{"name":"methods","type":{"type":"MethodData","generic":null},"modifier":["public"]},{"name":"type","type":{"type":"String","generic":null},"modifier":["private"]},{"name":"parent","type":{"type":"String","generic":null},"modifier":["private"]},{"name":"childrenClasses","type":{"type":"ClassData","generic":null},"modifier":["private"]}],"methods":[{"name":"of","returnType":"ClassData","modifier":["public","static"],"parameter":["ClassOrInterfaceDeclaration classDeclaration"]},{"name":"of","returnType":"ClassData","modifier":["public","static"],"parameter":["ClassOrInterfaceDeclaration classDeclaration","boolean isInterface"]},{"name":"extract","returnType":"void","modifier":["public"],"parameter":["CompilationUnit compilationUnit"]}],"type":"class","parent":null,"childrenClasses":[]},{"simpleName":"FieldData","annotations":[{"name":"Data"}],"interfaces":[],"imports":["com.github.javaparser.ast.body.FieldDeclaration","lombok.Data","java.util.stream.Collectors"],"fields":[{"name":"name","type":{"type":"String","generic":null},"modifier":["private"]},{"name":"type","type":{"type":"FieldDeclarationData","generic":null},"modifier":["private"]},{"name":"modifier","type":{"type":"String","generic":null},"modifier":["private"]}],"methods":[{"name":"of","returnType":"FieldData","modifier":["public","static"],"parameter":["FieldDeclaration fieldDeclaration"]}],"type":"class","parent":null,"childrenClasses":[]},{"simpleName":"FieldDeclarationData","annotations":[{"name":"Data"}],"interfaces":[],"imports":["com.github.javaparser.ast.body.FieldDeclaration","lombok.Data","java.util.ArrayList","java.util.Arrays","java.util.List","java.util.stream.IntStream"],"fields":[{"name":"type","type":{"type":"String","generic":null},"modifier":["private"]},{"name":"generic","type":{"type":"FieldDeclarationData","generic":null},"modifier":["private"]}],"methods":[{"name":"of","returnType":"FieldDeclarationData","modifier":["public","static"],"parameter":["FieldDeclaration fieldDeclaration"]},{"name":"ofString","returnType":"FieldDeclarationData","modifier":["public","static"],"parameter":["String field"]}],"type":"class","parent":null,"childrenClasses":[]},{"simpleName":"GenerateWiki","annotations":[{"name":"Mojo"}],"interfaces":[],"imports":["com.fasterxml.jackson.annotation.JsonAutoDetect","com.fasterxml.jackson.annotation.PropertyAccessor","com.fasterxml.jackson.databind.ObjectMapper","com.fasterxml.jackson.databind.SerializationFeature","com.github.javaparser.StaticJavaParser","com.github.javaparser.ast.CompilationUnit","com.github.javaparser.ast.Modifier","com.github.javaparser.ast.body.ClassOrInterfaceDeclaration","com.github.javaparser.ast.body.TypeDeclaration","com.github.javaparser.ast.expr.ClassExpr","com.sun.source.tree.Tree","org.apache.maven.plugin.AbstractMojo","org.apache.maven.plugin.MojoExecutionException","org.apache.maven.plugins.annotations.LifecyclePhase","org.apache.maven.plugins.annotations.Mojo","org.apache.maven.plugins.annotations.Parameter","org.apache.maven.project.MavenProject","java.io.File","java.io.FileNotFoundException","java.io.IOException","java.util.Optional"],"fields":[{"name":"project","type":{"type":"MavenProject","generic":null},"modifier":["protected"]},{"name":"outputDirectory","type":{"type":"File","generic":null},"modifier":["private"]}],"methods":[{"name":"buildTree","returnType":"void","modifier":["public"],"parameter":["ProjectData tree","String packageName","File buildDirectory"]},{"name":"extractClass","returnType":"Optional<ClassData>","modifier":["private"],"parameter":["CompilationUnit compilationUnit","TypeDeclaration<?> type"]},{"name":"execute","returnType":"void","modifier":["public"],"parameter":[]},{"name":"getObjectMapper","returnType":"ObjectMapper","modifier":["private"],"parameter":[]}],"type":"class","parent":null,"childrenClasses":[]},{"simpleName":"MethodData","annotations":[{"name":"Data"}],"interfaces":[],"imports":["com.github.javaparser.ast.Node","com.github.javaparser.ast.body.MethodDeclaration","lombok.Data","java.util.stream.Collectors"],"fields":[{"name":"name","type":{"type":"String","generic":null},"modifier":["private"]},{"name":"returnType","type":{"type":"String","generic":null},"modifier":["private"]},{"name":"modifier","type":{"type":"String","generic":null},"modifier":["private"]},{"name":"parameter","type":{"type":"String","generic":null},"modifier":["private"]}],"methods":[{"name":"of","returnType":"MethodData","modifier":["public","static"],"parameter":["MethodDeclaration methodDeclaration"]}],"type":"class","parent":null,"childrenClasses":[]},{"simpleName":"PackageData","annotations":[{"name":"Data"}],"interfaces":["Comparator<PackageData>","Comparable<PackageData>"],"imports":["lombok.Data","java.util.ArrayList","java.util.Comparator","java.util.List"],"fields":[{"name":"packageName","type":{"type":"String","generic":null},"modifier":["public","final"]},{"name":"classes","type":{"type":"List","generic":[{"type":"ClassData","generic":null}]},"modifier":["public","final"]},{"name":"compileWarnings","type":{"type":"List","generic":[{"type":"String","generic":null}]},"modifier":["public","final"]}],"methods":[{"name":"addClass","returnType":"void","modifier":["public"],"parameter":["ClassData classData"]},{"name":"addCompileWarning","returnType":"void","modifier":["public"],"parameter":["String warning"]},{"name":"compareTo","returnType":"int","modifier":["public"],"parameter":["PackageData o"]},{"name":"compare","returnType":"int","modifier":["public"],"parameter":["PackageData o1","PackageData o2"]}],"type":"class","parent":null,"childrenClasses":[]},{"simpleName":"ProjectData","annotations":[{"name":"Data"}],"interfaces":[],"imports":["lombok.Data","java.util","java.util.stream.Stream"],"fields":[{"name":"packages","type":{"type":"ArrayList","generic":[{"type":"PackageData","generic":null}]},"modifier":["private","final"]}],"methods":[{"name":"addPackage","returnType":"void","modifier":["public"],"parameter":["PackageData packageData"]},{"name":"getPackage","returnType":"PackageData","modifier":["public"],"parameter":["int index"]},{"name":"getPackage","returnType":"PackageData","modifier":["public"],"parameter":["String packageName"]},{"name":"getOrCreatePackage","returnType":"PackageData","modifier":["public"],"parameter":["String packageName"]},{"name":"getPackageCount","returnType":"int","modifier":["public"],"parameter":[]},{"name":"streamPackages","returnType":"Stream<PackageData>","modifier":["public"],"parameter":[]}],"type":"class","parent":null,"childrenClasses":[{"simpleName":"BlaBLa","annotations":[],"interfaces":[],"imports":null,"fields":[{"name":"test","type":{"type":"Map","generic":[{"type":"ArrayList","generic":[{"type":"LinkedList","generic":null}]},{"type":"HashMap","generic":[{"type":"String","generic":null},{"type":" List","generic":null}]}]},"modifier":[]}],"methods":[],"type":"class","parent":null,"childrenClasses":[]}]},{"simpleName":"TestInterface","annotations":[],"interfaces":[],"imports":[],"fields":[],"methods":[],"type":"interface","parent":null,"childrenClasses":[]}],"compileWarnings":[]}],"packageCount":1}`);
+    </script>
+    <script id="code">
+      function init() {
+
+        // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
+        // For details, see https://gojs.net/latest/intro/buildingObjects.html
+        const $ = go.GraphObject.make;
+
+        myDiagram =
+          $(go.Diagram, "myDiagramDiv",
+            {
+              "undoManager.isEnabled": true,
+              layout: $(go.TreeLayout,
+                { // this only lays out in trees nodes connected by "generalization" links
+                  angle: 90,
+                  path: go.TreeLayout.PathSource,  // links go from child to parent
+                  setsPortSpot: false,  // keep Spot.AllSides for link connection spot
+                  setsChildPortSpot: false,  // keep Spot.AllSides
+                  // nodes not connected by "generalization" links are laid out horizontally
+                  arrangement: go.TreeLayout.ArrangementHorizontal
+                })
+            });
+
+        // show visibility or access as a single character at the beginning of each property or method
+        function convertVisibility(v) {
+          switch (v) {
+            case "public": return "+";
+            case "private": return "-";
+            case "protected": return "#";
+            case "package": return "~";
+            default: return v;
+          }
+        }
+
+        // the item template for properties
+        var propertyTemplate =
+          $(go.Panel, "Horizontal",
+            // property visibility/access
+            $(go.TextBlock,
+              { isMultiline: false, editable: false, width: 12 },
+              new go.Binding("text", "visibility", convertVisibility)),
+            // property name, underlined if scope=="class" to indicate static property
+            $(go.TextBlock,
+              { isMultiline: false, editable: true },
+              new go.Binding("text", "name").makeTwoWay(),
+              new go.Binding("isUnderline", "scope", s => s[0] === 'c')),
+            // property type, if known
+            $(go.TextBlock, "",
+              new go.Binding("text", "type", t => t ? ": " : "")),
+            $(go.TextBlock,
+              { isMultiline: false, editable: true },
+              new go.Binding("text", "type").makeTwoWay()),
+            // property default value, if any
+            $(go.TextBlock,
+              { isMultiline: false, editable: false },
+              new go.Binding("text", "default", s => s ? " = " + s : ""))
+          );
+
+        // the item template for methods
+        var methodTemplate =
+          $(go.Panel, "Horizontal",
+            // method visibility/access
+            $(go.TextBlock,
+              { isMultiline: false, editable: false, width: 12 },
+              new go.Binding("text", "visibility", convertVisibility)),
+            // method name, underlined if scope=="class" to indicate static method
+            $(go.TextBlock,
+              { isMultiline: false, editable: true },
+              new go.Binding("text", "name").makeTwoWay(),
+              new go.Binding("isUnderline", "scope", s => s[0] === 'c')),
+            // method parameters
+            $(go.TextBlock, "()",
+              // this does not permit adding/editing/removing of parameters via inplace edits
+              new go.Binding("text", "parameters", function (parr) {
+                var s = "(";
+                for (var i = 0; i < parr.length; i++) {
+                  var param = parr[i];
+                  if (i > 0) s += ", ";
+                  s += param.name + ": " + param.type;
+                }
+                return s + ")";
+              })),
+            // method return type, if any
+            $(go.TextBlock, "",
+              new go.Binding("text", "type", t => t ? ": " : "")),
+            $(go.TextBlock,
+              { isMultiline: false, editable: true },
+              new go.Binding("text", "type").makeTwoWay())
+          );
+
+        // this simple template does not have any buttons to permit adding or
+        // removing properties or methods, but it could!
+        myDiagram.nodeTemplate =
+          $(go.Node, "Auto",
+            {
+              locationSpot: go.Spot.Center,
+              fromSpot: go.Spot.AllSides,
+              toSpot: go.Spot.AllSides
+            },
+            $(go.Shape, { fill: "lightyellow" }),
+            $(go.Panel, "Table",
+              { defaultRowSeparatorStroke: "black" },
+              // header
+              $(go.TextBlock,
+                {
+                  row: 0, columnSpan: 2, margin: 3, alignment: go.Spot.Center,
+                  font: "bold 12pt sans-serif",
+                  isMultiline: false, editable: true
+                },
+                new go.Binding("text", "name").makeTwoWay()),
+              // properties
+              $(go.TextBlock, "Properties",
+                { row: 1, font: "italic 10pt sans-serif" },
+                new go.Binding("visible", "visible", v => !v).ofObject("PROPERTIES")),
+              $(go.Panel, "Vertical", { name: "PROPERTIES" },
+                new go.Binding("itemArray", "properties"),
+                {
+                  row: 1, margin: 3, stretch: go.GraphObject.Fill,
+                  defaultAlignment: go.Spot.Left, background: "lightyellow",
+                  itemTemplate: propertyTemplate
+                }
+              ),
+              $("PanelExpanderButton", "PROPERTIES",
+                { row: 1, column: 1, alignment: go.Spot.TopRight, visible: false },
+                new go.Binding("visible", "properties", arr => arr.length > 0)),
+              // methods
+              $(go.TextBlock, "Methods",
+                { row: 2, font: "italic 10pt sans-serif" },
+                new go.Binding("visible", "visible", v => !v).ofObject("METHODS")),
+              $(go.Panel, "Vertical", { name: "METHODS" },
+                new go.Binding("itemArray", "methods"),
+                {
+                  row: 2, margin: 3, stretch: go.GraphObject.Fill,
+                  defaultAlignment: go.Spot.Left, background: "lightyellow",
+                  itemTemplate: methodTemplate
+                }
+              ),
+              $("PanelExpanderButton", "METHODS",
+                { row: 2, column: 1, alignment: go.Spot.TopRight, visible: false },
+                new go.Binding("visible", "methods", arr => arr.length > 0))
+            )
+          );
+
+        function convertIsTreeLink(r) {
+          return r === "generalization";
+        }
+
+        function convertFromArrow(r) {
+          switch (r) {
+            case "generalization": return "";
+            default: return "";
+          }
+        }
+
+        function convertToArrow(r) {
+          switch (r) {
+            case "generalization": return "Triangle";
+            case "aggregation": return "StretchedDiamond";
+            default: return "";
+          }
+        }
+
+        myDiagram.linkTemplate =
+          $(go.Link,
+            { routing: go.Link.Orthogonal },
+            new go.Binding("isLayoutPositioned", "relationship", convertIsTreeLink),
+            $(go.Shape),
+            $(go.Shape, { scale: 1.3, fill: "white" },
+              new go.Binding("fromArrow", "relationship", convertFromArrow)),
+            $(go.Shape, { scale: 1.3, fill: "white" },
+              new go.Binding("toArrow", "relationship", convertToArrow))
+          );
+
+        // setup a few example class nodes and relationships
+
+        function getVisibilityOfModifierArray(modifier) {
+          console.log(modifier);
+          if (modifier.includes("private"))
+            return "private";
+
+          if (modifier.includes("public"))
+            return "public";
+          if (modifier.includes("protected"))
+            return "protected";
+
+          return "";
+        }
+
+
+        function dataFromExample(data) {
+          console.log(data);
+          let returnal = [];
+          let key = 1;
+          data.packages.forEach(packages => {
+            packages.classes.forEach(classData => {
+
+              let properties = [];
+              classData.fields.forEach(field => { 
+                properties.push({
+                  name: field.name,
+                  type: field.type.type,
+                  visibility: getVisibilityOfModifierArray(field.modifier)
+                });
+              });
+              let methods = [];
+              classData.methods.forEach(method => {
+
+                let parameters = [];
+
+                method.parameter.forEach(parameter => {
+                  let parms = parameter.split(" ");
+                  parameters.push({
+                    name: parms[1],
+                    type: parms[0]
+                  });
+                });
+
+                methods.push({
+                  name: method.name,
+                  parameters: method.parameters,
+                  visibility: getVisibilityOfModifierArray(method.modifier)
+                });
+              }); +
+
+
+                returnal.push({
+                  key: key++,
+                  name: classData.simpleName,
+                  properties: properties,
+                  methods: methods
+                });
+            });
+          });
+          return returnal;
+        }
+        var nodedata = dataFromExample(exampleData);
+        console.log(nodedata)
+
+        var linkdata = [ 
+        { from: 1, to: 2, relationship: "generalization" },
+        { from: 3, to: 4, relationship: "generalization" },
+        { from: 5, to: 6, relationship: "aggregation" },
+        { from: 1, to: 3, relationship: "aggregation" }
+        ];
+        myDiagram.model = new go.GraphLinksModel(
+          {
+            copiesArrays: true,
+            copiesArrayObjects: true,
+            nodeDataArray: nodedata, 
+            linkDataArray: linkdata
+
+          });
+      }
+
+      window.addEventListener('DOMContentLoaded', init);
+    </script>
+
+    <div id="sample">
+      <div id="myDiagramDiv"
+        style="border: 1px solid black; width: 100%; height: 600px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);">
+        <canvas tabindex="0" width="1054" height="598"
+          style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1054px; height: 598px;">This
+          text is displayed if your browser does not support the Canvas HTML element.</canvas>
+        <div style="position: absolute; overflow: auto; width: 1054px; height: 598px; z-index: 1;">
+          <div style="position: absolute; width: 1px; height: 1px;"></div>
+        </div>
+      </div>
+      <p>
+        This sample demonstrates one way of defining a UML (Unified Modeling Language) Class Diagram.
+        Note the use of a separate Panel for the properties and one for the methods,
+        allowing for an item template for properties and a separate item template for methods. <a
+          href="../intro/buttons.html#panelExpanderButton" target="_blank">PanelExpanderButton</a>s are used to
+        hide/show class properties and methods.
+      </p>
+      <p>
+        In this example, symbol prefixes indicate the visibility of methods and properties. The three possibilities are:
+      </p>
+      <ul>
+        <li>+ (Public)</li>
+        <li>- (Private)</li>
+        <li># (Protected)</li>
+      </ul>
+      Additionally, the ~ symbol is used to indicate an item is a package.
+      <p></p>
+      <p class="text-xs">GoJS version 2.2.5. Copyright 1998-2022 by Northwoods Software.</p>
+    </div>
+    <p><a href="https://github.com/NorthwoodsSoftware/GoJS/blob/master/samples/umlClass.html" target="_blank">View this
+        sample page's source on GitHub</a></p>
+    <pre class=" language-js">
+    <span class="token keyword">function</span> <span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+      <span class="token comment">// Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make</span>
+      <span class="token comment">// For details, see https://gojs.net/latest/intro/buildingObjects.html</span>
+      <span class="token keyword">const</span> $ <span class="token operator">=</span> go<span class="token punctuation">.</span>GraphObject<span class="token punctuation">.</span>make<span class="token punctuation">;</span>
+
+      myDiagram <span class="token operator">=</span>
+        <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Diagram<span class="token punctuation">,</span> <span class="token string">"myDiagramDiv"</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span>
+            <span class="token string">"undoManager.isEnabled"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+            layout<span class="token operator">:</span> <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TreeLayout<span class="token punctuation">,</span>
+              <span class="token punctuation">{</span> <span class="token comment">// this only lays out in trees nodes connected by "generalization" links</span>
+                angle<span class="token operator">:</span> <span class="token number">90</span><span class="token punctuation">,</span>
+                path<span class="token operator">:</span> go<span class="token punctuation">.</span>TreeLayout<span class="token punctuation">.</span>PathSource<span class="token punctuation">,</span>  <span class="token comment">// links go from child to parent</span>
+                setsPortSpot<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>  <span class="token comment">// keep Spot.AllSides for link connection spot</span>
+                setsChildPortSpot<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>  <span class="token comment">// keep Spot.AllSides</span>
+                <span class="token comment">// nodes not connected by "generalization" links are laid out horizontally</span>
+                arrangement<span class="token operator">:</span> go<span class="token punctuation">.</span>TreeLayout<span class="token punctuation">.</span>ArrangementHorizontal
+              <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">// show visibility or access as a single character at the beginning of each property or method</span>
+      <span class="token keyword">function</span> <span class="token function">convertVisibility</span><span class="token punctuation">(</span><span class="token parameter">v</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">switch</span> <span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">case</span> <span class="token string">"public"</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">"+"</span><span class="token punctuation">;</span>
+          <span class="token keyword">case</span> <span class="token string">"private"</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">"-"</span><span class="token punctuation">;</span>
+          <span class="token keyword">case</span> <span class="token string">"protected"</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">"#"</span><span class="token punctuation">;</span>
+          <span class="token keyword">case</span> <span class="token string">"package"</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">"~"</span><span class="token punctuation">;</span>
+          <span class="token keyword">default</span><span class="token operator">:</span> <span class="token keyword">return</span> v<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token comment">// the item template for properties</span>
+      <span class="token keyword">var</span> propertyTemplate <span class="token operator">=</span>
+        <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Panel<span class="token punctuation">,</span> <span class="token string">"Horizontal"</span><span class="token punctuation">,</span>
+          <span class="token comment">// property visibility/access</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> isMultiline<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> editable<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> width<span class="token operator">:</span> <span class="token number">12</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"visibility"</span><span class="token punctuation">,</span> convertVisibility<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token comment">// property name, underlined if scope=="class" to indicate static property</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> isMultiline<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> editable<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">makeTwoWay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"isUnderline"</span><span class="token punctuation">,</span> <span class="token string">"scope"</span><span class="token punctuation">,</span> <span class="token parameter">s</span> <span class="token operator">=&gt;</span> s<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">===</span> <span class="token string">'c'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token comment">// property type, if known</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"type"</span><span class="token punctuation">,</span> <span class="token parameter">t</span> <span class="token operator">=&gt;</span> t <span class="token operator">?</span> <span class="token string">": "</span> <span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> isMultiline<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> editable<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"type"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">makeTwoWay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token comment">// property default value, if any</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> isMultiline<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> editable<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"default"</span><span class="token punctuation">,</span> <span class="token parameter">s</span> <span class="token operator">=&gt;</span> s <span class="token operator">?</span> <span class="token string">" = "</span> <span class="token operator">+</span> s <span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">// the item template for methods</span>
+      <span class="token keyword">var</span> methodTemplate <span class="token operator">=</span>
+        <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Panel<span class="token punctuation">,</span> <span class="token string">"Horizontal"</span><span class="token punctuation">,</span>
+          <span class="token comment">// method visibility/access</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> isMultiline<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> editable<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> width<span class="token operator">:</span> <span class="token number">12</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"visibility"</span><span class="token punctuation">,</span> convertVisibility<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token comment">// method name, underlined if scope=="class" to indicate static method</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> isMultiline<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> editable<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">makeTwoWay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"isUnderline"</span><span class="token punctuation">,</span> <span class="token string">"scope"</span><span class="token punctuation">,</span> <span class="token parameter">s</span> <span class="token operator">=&gt;</span> s<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">===</span> <span class="token string">'c'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token comment">// method parameters</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span> <span class="token string">"()"</span><span class="token punctuation">,</span>
+            <span class="token comment">// this does not permit adding/editing/removing of parameters via inplace edits</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"parameters"</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">parr</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              <span class="token keyword">var</span> s <span class="token operator">=</span> <span class="token string">"("</span><span class="token punctuation">;</span>
+              <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> parr<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">var</span> param <span class="token operator">=</span> parr<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> s <span class="token operator">+=</span> <span class="token string">", "</span><span class="token punctuation">;</span>
+                s <span class="token operator">+=</span> param<span class="token punctuation">.</span>name <span class="token operator">+</span> <span class="token string">": "</span> <span class="token operator">+</span> param<span class="token punctuation">.</span>type<span class="token punctuation">;</span>
+              <span class="token punctuation">}</span>
+              <span class="token keyword">return</span> s <span class="token operator">+</span> <span class="token string">")"</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token comment">// method return type, if any</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"type"</span><span class="token punctuation">,</span> <span class="token parameter">t</span> <span class="token operator">=&gt;</span> t <span class="token operator">?</span> <span class="token string">": "</span> <span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> isMultiline<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> editable<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"type"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">makeTwoWay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">// this simple template does not have any buttons to permit adding or</span>
+      <span class="token comment">// removing properties or methods, but it could!</span>
+      myDiagram<span class="token punctuation">.</span>nodeTemplate <span class="token operator">=</span>
+        <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Node<span class="token punctuation">,</span> <span class="token string">"Auto"</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span>
+            locationSpot<span class="token operator">:</span> go<span class="token punctuation">.</span>Spot<span class="token punctuation">.</span>Center<span class="token punctuation">,</span>
+            fromSpot<span class="token operator">:</span> go<span class="token punctuation">.</span>Spot<span class="token punctuation">.</span>AllSides<span class="token punctuation">,</span>
+            toSpot<span class="token operator">:</span> go<span class="token punctuation">.</span>Spot<span class="token punctuation">.</span>AllSides
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Shape<span class="token punctuation">,</span> <span class="token punctuation">{</span> fill<span class="token operator">:</span> <span class="token string">"lightyellow"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Panel<span class="token punctuation">,</span> <span class="token string">"Table"</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> defaultRowSeparatorStroke<span class="token operator">:</span> <span class="token string">"black"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token comment">// header</span>
+            <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span>
+              <span class="token punctuation">{</span>
+                row<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> columnSpan<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> margin<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> alignment<span class="token operator">:</span> go<span class="token punctuation">.</span>Spot<span class="token punctuation">.</span>Center<span class="token punctuation">,</span>
+                font<span class="token operator">:</span> <span class="token string">"bold 12pt sans-serif"</span><span class="token punctuation">,</span>
+                isMultiline<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> editable<span class="token operator">:</span> <span class="token boolean">true</span>
+              <span class="token punctuation">}</span><span class="token punctuation">,</span>
+              <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">makeTwoWay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token comment">// properties</span>
+            <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span> <span class="token string">"Properties"</span><span class="token punctuation">,</span>
+              <span class="token punctuation">{</span> row<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> font<span class="token operator">:</span> <span class="token string">"italic 10pt sans-serif"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+              <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"visible"</span><span class="token punctuation">,</span> <span class="token string">"visible"</span><span class="token punctuation">,</span> <span class="token parameter">v</span> <span class="token operator">=&gt;</span> <span class="token operator">!</span>v<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ofObject</span><span class="token punctuation">(</span><span class="token string">"PROPERTIES"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Panel<span class="token punctuation">,</span> <span class="token string">"Vertical"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"PROPERTIES"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+              <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"itemArray"</span><span class="token punctuation">,</span> <span class="token string">"properties"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              <span class="token punctuation">{</span>
+                row<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> margin<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> stretch<span class="token operator">:</span> go<span class="token punctuation">.</span>GraphObject<span class="token punctuation">.</span>Fill<span class="token punctuation">,</span>
+                defaultAlignment<span class="token operator">:</span> go<span class="token punctuation">.</span>Spot<span class="token punctuation">.</span>Left<span class="token punctuation">,</span> background<span class="token operator">:</span> <span class="token string">"lightyellow"</span><span class="token punctuation">,</span>
+                itemTemplate<span class="token operator">:</span> propertyTemplate
+              <span class="token punctuation">}</span>
+            <span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"PanelExpanderButton"</span><span class="token punctuation">,</span> <span class="token string">"PROPERTIES"</span><span class="token punctuation">,</span>
+              <span class="token punctuation">{</span> row<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> column<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> alignment<span class="token operator">:</span> go<span class="token punctuation">.</span>Spot<span class="token punctuation">.</span>TopRight<span class="token punctuation">,</span> visible<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+              <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"visible"</span><span class="token punctuation">,</span> <span class="token string">"properties"</span><span class="token punctuation">,</span> <span class="token parameter">arr</span> <span class="token operator">=&gt;</span> arr<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token comment">// methods</span>
+            <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>TextBlock<span class="token punctuation">,</span> <span class="token string">"Methods"</span><span class="token punctuation">,</span>
+              <span class="token punctuation">{</span> row<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> font<span class="token operator">:</span> <span class="token string">"italic 10pt sans-serif"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+              <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"visible"</span><span class="token punctuation">,</span> <span class="token string">"visible"</span><span class="token punctuation">,</span> <span class="token parameter">v</span> <span class="token operator">=&gt;</span> <span class="token operator">!</span>v<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ofObject</span><span class="token punctuation">(</span><span class="token string">"METHODS"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Panel<span class="token punctuation">,</span> <span class="token string">"Vertical"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"METHODS"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+              <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"itemArray"</span><span class="token punctuation">,</span> <span class="token string">"methods"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              <span class="token punctuation">{</span>
+                row<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> margin<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> stretch<span class="token operator">:</span> go<span class="token punctuation">.</span>GraphObject<span class="token punctuation">.</span>Fill<span class="token punctuation">,</span>
+                defaultAlignment<span class="token operator">:</span> go<span class="token punctuation">.</span>Spot<span class="token punctuation">.</span>Left<span class="token punctuation">,</span> background<span class="token operator">:</span> <span class="token string">"lightyellow"</span><span class="token punctuation">,</span>
+                itemTemplate<span class="token operator">:</span> methodTemplate
+              <span class="token punctuation">}</span>
+            <span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"PanelExpanderButton"</span><span class="token punctuation">,</span> <span class="token string">"METHODS"</span><span class="token punctuation">,</span>
+              <span class="token punctuation">{</span> row<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> column<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> alignment<span class="token operator">:</span> go<span class="token punctuation">.</span>Spot<span class="token punctuation">.</span>TopRight<span class="token punctuation">,</span> visible<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+              <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"visible"</span><span class="token punctuation">,</span> <span class="token string">"methods"</span><span class="token punctuation">,</span> <span class="token parameter">arr</span> <span class="token operator">=&gt;</span> arr<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+          <span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">function</span> <span class="token function">convertIsTreeLink</span><span class="token punctuation">(</span><span class="token parameter">r</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> r <span class="token operator">===</span> <span class="token string">"generalization"</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">function</span> <span class="token function">convertFromArrow</span><span class="token punctuation">(</span><span class="token parameter">r</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">switch</span> <span class="token punctuation">(</span>r<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">case</span> <span class="token string">"generalization"</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">;</span>
+          <span class="token keyword">default</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">function</span> <span class="token function">convertToArrow</span><span class="token punctuation">(</span><span class="token parameter">r</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">switch</span> <span class="token punctuation">(</span>r<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">case</span> <span class="token string">"generalization"</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">"Triangle"</span><span class="token punctuation">;</span>
+          <span class="token keyword">case</span> <span class="token string">"aggregation"</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">"StretchedDiamond"</span><span class="token punctuation">;</span>
+          <span class="token keyword">default</span><span class="token operator">:</span> <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      myDiagram<span class="token punctuation">.</span>linkTemplate <span class="token operator">=</span>
+        <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Link<span class="token punctuation">,</span>
+          <span class="token punctuation">{</span> routing<span class="token operator">:</span> go<span class="token punctuation">.</span>Link<span class="token punctuation">.</span>Orthogonal <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"isLayoutPositioned"</span><span class="token punctuation">,</span> <span class="token string">"relationship"</span><span class="token punctuation">,</span> convertIsTreeLink<span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Shape<span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Shape<span class="token punctuation">,</span> <span class="token punctuation">{</span> scale<span class="token operator">:</span> <span class="token number">1.3</span><span class="token punctuation">,</span> fill<span class="token operator">:</span> <span class="token string">"white"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"fromArrow"</span><span class="token punctuation">,</span> <span class="token string">"relationship"</span><span class="token punctuation">,</span> convertFromArrow<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">$</span><span class="token punctuation">(</span>go<span class="token punctuation">.</span>Shape<span class="token punctuation">,</span> <span class="token punctuation">{</span> scale<span class="token operator">:</span> <span class="token number">1.3</span><span class="token punctuation">,</span> fill<span class="token operator">:</span> <span class="token string">"white"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>Binding</span><span class="token punctuation">(</span><span class="token string">"toArrow"</span><span class="token punctuation">,</span> <span class="token string">"relationship"</span><span class="token punctuation">,</span> convertToArrow<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">// setup a few example class nodes and relationships</span>
+      <span class="token keyword">var</span> nodedata <span class="token operator">=</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          key<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+          name<span class="token operator">:</span> <span class="token string">"BankAccount"</span><span class="token punctuation">,</span>
+          properties<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"owner"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"String"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"balance"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"Currency"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span><span class="token punctuation">,</span> <span class="token keyword">default</span><span class="token operator">:</span> <span class="token string">"0"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          methods<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"deposit"</span><span class="token punctuation">,</span> parameters<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"amount"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"Currency"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"withdraw"</span><span class="token punctuation">,</span> parameters<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"amount"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"Currency"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          key<span class="token operator">:</span> <span class="token number">11</span><span class="token punctuation">,</span>
+          name<span class="token operator">:</span> <span class="token string">"Person"</span><span class="token punctuation">,</span>
+          properties<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"name"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"String"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"birth"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"Date"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"protected"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          methods<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"getCurrentAge"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"int"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          key<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+          name<span class="token operator">:</span> <span class="token string">"Student"</span><span class="token punctuation">,</span>
+          properties<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"classes"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"List"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          methods<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"attend"</span><span class="token punctuation">,</span> parameters<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"class"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"Course"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"private"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"sleep"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"private"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          key<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span>
+          name<span class="token operator">:</span> <span class="token string">"Professor"</span><span class="token punctuation">,</span>
+          properties<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"classes"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"List"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          methods<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"teach"</span><span class="token punctuation">,</span> parameters<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"class"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"Course"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"private"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          key<span class="token operator">:</span> <span class="token number">14</span><span class="token punctuation">,</span>
+          name<span class="token operator">:</span> <span class="token string">"Course"</span><span class="token punctuation">,</span>
+          properties<span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"name"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"String"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"description"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"String"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"professor"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"Professor"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"location"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"String"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"times"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"List"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"prerequisites"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"List"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">"students"</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">"List"</span><span class="token punctuation">,</span> visibility<span class="token operator">:</span> <span class="token string">"public"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> linkdata <span class="token operator">=</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span> from<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> to<span class="token operator">:</span> <span class="token number">11</span><span class="token punctuation">,</span> relationship<span class="token operator">:</span> <span class="token string">"generalization"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span> from<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> to<span class="token operator">:</span> <span class="token number">11</span><span class="token punctuation">,</span> relationship<span class="token operator">:</span> <span class="token string">"generalization"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span> from<span class="token operator">:</span> <span class="token number">14</span><span class="token punctuation">,</span> to<span class="token operator">:</span> <span class="token number">13</span><span class="token punctuation">,</span> relationship<span class="token operator">:</span> <span class="token string">"aggregation"</span> <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span><span class="token punctuation">;</span>
+      myDiagram<span class="token punctuation">.</span>model <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">go<span class="token punctuation">.</span>GraphLinksModel</span><span class="token punctuation">(</span>
+        <span class="token punctuation">{</span>
+          copiesArrays<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+          copiesArrayObjects<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+          nodeDataArray<span class="token operator">:</span> nodedata<span class="token punctuation">,</span>
+          linkDataArray<span class="token operator">:</span> linkdata
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'DOMContentLoaded'</span><span class="token punctuation">,</span> init<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  </pre>
+  </div>
+</body>
+
+</html>
