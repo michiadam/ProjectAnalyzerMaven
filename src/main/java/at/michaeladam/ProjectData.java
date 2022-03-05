@@ -6,12 +6,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Data
-public class ProjectData extends lablaSuper {
+public class ProjectData {
 
-    private class BlaBLa {
-        Map<ArrayList<LinkedList>, HashMap<String, List>> test;
-
-    };
     //List of packages
     private final ArrayList<PackageData> packages;
 

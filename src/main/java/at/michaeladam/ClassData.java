@@ -3,10 +3,9 @@ package at.michaeladam;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.metamodel.ClassOrInterfaceDeclarationMetaModel;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import lombok.Data;
 
 import java.util.Optional;
@@ -15,31 +14,27 @@ import java.util.stream.Collectors;
 @Data
 public class ClassData {
 
-    public String simpleName;
+    protected String simpleName;
 
-    public AnnotationData[] annotations;
+    protected AnnotationData[] annotations;
 
-    public String[] interfaces;
+    protected String[] interfaces;
 
-    public String[] imports;
+    protected String[] imports;
 
-    public FieldData[] fields;
-    public MethodData[] methods;
+    protected FieldData[] fields;
+    protected MethodData[] methods;
 
-    private String type;
-    private String parent;
-    private ClassData[] childrenClasses;
+    protected String type;
+    protected String parent;
+    protected ClassData[] childrenClasses;
 
     public static ClassData of(ClassOrInterfaceDeclaration classDeclaration) {
         ClassData classData = new ClassData();
         classData.simpleName = classDeclaration.getNameAsString();
         classData.annotations = AnnotationData.of(classDeclaration.getAnnotations());
-        classData.interfaces = classDeclaration.getImplementedTypes().stream().map(type -> type.asString()).collect(Collectors.toList()).toArray(new String[0]);
+        classData.interfaces = classDeclaration.getImplementedTypes().stream().map(ClassOrInterfaceType::asString).toArray(String[]::new);
         classData.setType("class");
-
-        Optional<Node> parentNode = classDeclaration.getParentNode();
-        ClassOrInterfaceDeclarationMetaModel metaModel = classDeclaration.getMetaModel();
-
 
         classData.childrenClasses = classDeclaration.getMembers()
                 .stream()
@@ -65,11 +60,11 @@ public class ClassData {
 
 
     public void extract(CompilationUnit compilationUnit) {
-        var imports = compilationUnit.getImports();
-        this.imports = imports.stream().map(ImportDeclaration::getNameAsString).collect(Collectors.toList()).toArray(new String[0]);
-        compilationUnit.getTypes().forEach(type -> {
+        this.imports = compilationUnit.getImports()
+                .stream().map(ImportDeclaration::getNameAsString).collect(Collectors.toList()).toArray(new String[0]);
+        compilationUnit.getTypes().forEach(typeRaw -> {
 
-            Optional<Node> parentNode1 = type.getParentNode();
+            Optional<Node> parentNode1 = typeRaw.getParentNode();
 
             if (parentNode1.isPresent()) {
                 Node node = parentNode1.get();
@@ -82,7 +77,6 @@ public class ClassData {
                     String[] split = name.split("extends");
                     String extendClass = split[1].split("\n")[0].replace("\r","").replace(" ", "").replace("{", "");
 
-                    System.out.println("extendClass: " + extendClass);
                     this.parent = extendClass;
 
 

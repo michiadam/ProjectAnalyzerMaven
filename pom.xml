@@ -2,14 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>at.michaeladam</groupId>
-    <artifactId>ProjectAnalyzerMaven</artifactId>
-    <version>1.0</version>
+    <artifactId>projectAnalyzer</artifactId>
+    <version>0.1</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
     </properties>
-    <name>ProjectAnalyzerMaven Maven Mojo</name>
+    <name>ProjectAnalyzer</name>
+    <description>Extract the classes of a javaproject and store them in a json format.</description>
     <packaging>maven-plugin</packaging>
     <build>
         <plugins>

@@ -3,20 +3,18 @@ package at.michaeladam;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import lombok.Data;
 
-import java.util.stream.Collectors;
-
 
 @Data
 public class FieldData {
 
     private String name;
-    private FieldDeclarationData type;
+    private TypeData type;
     private String[] modifier;
 
     public static FieldData of(FieldDeclaration fieldDeclaration) {
         FieldData fieldData = new FieldData();
         fieldData.setName(fieldDeclaration.getVariables().get(0).getNameAsString());
-        fieldData.setType(FieldDeclarationData.of(fieldDeclaration));
+        fieldData.setType(TypeData.of(fieldDeclaration));
         //Parse the element type from A<B<C>> to A B C
 
 
