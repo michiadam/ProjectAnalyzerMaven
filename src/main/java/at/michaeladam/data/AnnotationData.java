@@ -1,4 +1,4 @@
-package at.michaeladam;
+package at.michaeladam.data;
 
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.AnnotationExpr;

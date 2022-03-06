@@ -1,6 +1,9 @@
 package at.michaeladam;
 
 
+import at.michaeladam.data.ClassData;
+import at.michaeladam.data.PackageData;
+import at.michaeladam.data.ProjectData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.javaparser.StaticJavaParser;
@@ -91,7 +94,6 @@ public class GenerateWiki extends AbstractMojo {
                         Optional<ClassData> classData = extractClass(compilationUnit, type);
                         if (classData.isPresent()) {
                             ClassData extractedClassData = classData.get();
-                            extractedClassData.extract(compilationUnit);
                             packageData.addClass(extractedClassData);
 
                         } else {
@@ -117,12 +119,12 @@ public class GenerateWiki extends AbstractMojo {
 
 
 
-            return Optional.of(ClassData.of(classDeclaration, false));
+            return Optional.of(ClassData.of(compilationUnit, classDeclaration, false));
 
         }
         var interfaceByName = compilationUnit.getInterfaceByName(String.valueOf(type.getName()));
         if (interfaceByName.isPresent()) {
-            return Optional.of(ClassData.of(interfaceByName.get(), true));
+            return Optional.of(ClassData.of(compilationUnit, interfaceByName.get(), true));
         }
         return Optional.empty();
     }

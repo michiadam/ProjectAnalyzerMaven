@@ -1,4 +1,4 @@
-package at.michaeladam;
+package at.michaeladam.data;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -17,13 +17,13 @@ public class MethodData {
     private String[] modifier;
     private Map<String, TypeData> parameter;
 
-    public static MethodData of(MethodDeclaration methodDeclaration) {
+    public static MethodData of(ClassData classData, MethodDeclaration methodDeclaration) {
         MethodData methodData = new MethodData();
         methodData.setName(methodDeclaration.getNameAsString());
-        methodData.setReturnType(TypeData.ofString(methodDeclaration.getType().toString()));
+        methodData.setReturnType(TypeData.ofString(classData, methodDeclaration.getType().asString()));
         methodData.setModifier(methodDeclaration.getModifiers().stream().map(Node::toString).map(String::trim).toArray(String[]::new));
         methodData.parameter = methodDeclaration.getParameters()
-                .stream().collect(Collectors.toMap(NodeWithSimpleName::getNameAsString, p -> TypeData.ofString(p.getType().asString())));
+                .stream().collect(Collectors.toMap(NodeWithSimpleName::getNameAsString, p -> TypeData.ofString(classData, p.getType().asString())));
         return methodData;
     }
 }

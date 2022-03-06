@@ -1,4 +1,4 @@
-package at.michaeladam;
+package at.michaeladam.data;
 
 import lombok.Data;
 
