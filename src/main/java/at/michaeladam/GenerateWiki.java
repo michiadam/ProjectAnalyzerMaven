@@ -43,13 +43,25 @@ public class GenerateWiki extends AbstractMojo {
         File[] files = buildDirectory.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-                String newPackagename = switch (packageName) {
-                    case "" -> file.getName();
-                    case "src", "main" -> "src/" + file.getName();
-                    case "java" -> "java/" + file.getName();
-                    case "test" -> "test/" + file.getName();
-                    default -> packageName + "." + file.getName();
-                };
+                String newPackagename;
+                switch (packageName) {
+                    case "":
+                        newPackagename = file.getName();
+                        break;
+                    case "src":
+                    case "main":
+                        newPackagename = "src/" + file.getName();
+                        break;
+                    case "java":
+                        newPackagename = "java/" + file.getName();
+                        break;
+                    case "test":
+                        newPackagename = "test/" + file.getName();
+                        break;
+                    default:
+                        newPackagename = packageName + "." + file.getName();
+                        break;
+                }
 
                 buildTree(tree, newPackagename, file);
 
