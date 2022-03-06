@@ -1,6 +1,7 @@
 package at.michaeladam.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import at.michaeladam.data.serializer.TypeDataDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import lombok.Data;
 
@@ -10,10 +11,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Data
+@JsonDeserialize(using = TypeDataDeserializer.class)
 public class TypeData {
 
     private String id;
     private String type;
+    @JsonDeserialize(using = TypeDataDeserializer.class)
     private TypeData[] generic;
 
     public static TypeData of(ClassData classData, FieldDeclaration fieldDeclaration) {
@@ -33,11 +36,9 @@ public class TypeData {
             if (classData.imports != null) {
                 String plainField = field.replaceAll("\\[.*?\\]", "")
                         .replaceAll("\\<.*?\\>", "");
-                Arrays.stream(classData.imports).filter(s -> s.contains(plainField)).findFirst().ifPresent(importData -> {
-                    typeData.id = importData + "." + plainField;
-                });
+                Arrays.stream(classData.imports).filter(s -> s.contains(plainField)).findFirst()
+                        .ifPresent(importData -> typeData.id = importData + "." + plainField);
                 if (typeData.id == null) {
-                    System.out.println("parent class: " + classData.parent);
                     //ignore primitive types and Strings
                     if (Stream.of(".", "String", "int", "long", "double", "float", "boolean", "char", "void").noneMatch(field::contains)) {
                        typeData.id = classData.getPackage() + "." + plainField;

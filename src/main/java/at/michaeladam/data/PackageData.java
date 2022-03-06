@@ -3,11 +3,10 @@ package at.michaeladam.data;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Data
-public class PackageData implements Comparator<PackageData> , Comparable<PackageData> {
+public class PackageData{
 
     public final String packageName;
     public final List<ClassData> classes;
@@ -28,13 +27,5 @@ public class PackageData implements Comparator<PackageData> , Comparable<Package
     }
 
 
-    @Override
-    public int compareTo(PackageData o) {
-        return 0;
-    }
 
-    @Override
-    public int compare(PackageData o1, PackageData o2) {
-        return 0;
-    }
 }

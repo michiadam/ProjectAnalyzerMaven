@@ -1,4 +1,4 @@
-package at.michaeladam;
+package at.michaeladam.controller;
 
 
 import at.michaeladam.data.ClassData;
@@ -102,6 +102,7 @@ public class GenerateWiki extends AbstractMojo {
 
 
                 }
+                //todo implement enum
 
             });
         } catch (IOException e) {
