@@ -28,7 +28,7 @@ import java.util.Optional;
  * @phase process-sources
  */
 @Mojo(name = "analyze", defaultPhase = LifecyclePhase.VALIDATE)
-public class GenerateWiki extends AbstractMojo {
+public class AnalyzeMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;

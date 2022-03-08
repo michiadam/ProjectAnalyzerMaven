@@ -33,6 +33,9 @@ public class ClassData {
     protected String parent;
     protected ClassData[] childrenClasses;
 
+    private String extendType;
+    private String implementsType;
+
     public String getPackage(){
         return id.substring(0, id.lastIndexOf("."));
     }
@@ -80,24 +83,6 @@ public class ClassData {
                 .stream().map(ImportDeclaration::getNameAsString).collect(Collectors.toList()).toArray(new String[0]);
         compilationUnit.getTypes().forEach(typeRaw -> {
 
-            Optional<Node> parentNode1 = typeRaw.getParentNode();
-
-            if (parentNode1.isPresent()) {
-                Node node = parentNode1.get();
-
-
-                if (node.toString().contains("extends")) {
-                    String name = node.toString();
-
-                    //get the extends
-                    String[] split = name.split("extends");
-                    String extendClass = split[1].split("\n")[0].replace("\r","").replace(" ", "").replace("{", "");
-
-                    this.parent = extendClass;
-
-
-                }
-            }
         });
     }
 }

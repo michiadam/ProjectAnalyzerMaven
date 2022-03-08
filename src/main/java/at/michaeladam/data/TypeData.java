@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -29,7 +28,8 @@ public class TypeData {
     }
 
     private static void getTypeID(ClassData classData, TypeData typeData, String field) {
-
+        field = field.replace(" extends ", "_extends_");
+        field = field.trim();
         if (field.contains(".")) {
             typeData.id = field;
         } else {
@@ -40,8 +40,10 @@ public class TypeData {
                         .ifPresent(importData -> typeData.id = importData + "." + plainField);
                 if (typeData.id == null) {
                     //ignore primitive types and Strings
-                    if (Stream.of(".", "String", "int", "long", "double", "float", "boolean", "char", "void").noneMatch(field::contains)) {
-                       typeData.id = classData.getPackage() + "." + plainField;
+                    if(plainField.contains("?")) {
+                        typeData.id = "wildcard";
+                    } else if (Stream.of(".", "String", "int", "long", "double", "float", "boolean", "char", "void").noneMatch(field::contains)) {
+                        typeData.id = field;
                     } else {
 
                         typeData.id = plainField;
@@ -58,24 +60,12 @@ public class TypeData {
         if (field.contains("<")) {
             typeData.type = field.substring(0, field.indexOf("<"));
 
-            String generic = field.substring(field.indexOf("<") + 1, field.lastIndexOf(">"));
-
-            List<String> types = new ArrayList<>();
-            if (generic.contains("<")) {
-                extractGeneric(generic, types);
-
-            } else {
-                if (generic.contains(",")) {
-                    types.addAll(Arrays.asList(generic.split(",")));
-                } else {
-                    types.add(generic);
-                }
-            }
+            List<String> types = ExtractionHelper.extractTypesOfGenericField(field);
 
             typeData.generic = types.stream().map(declaration -> ofString(classData, declaration)).toArray(TypeData[]::new);
 
         } else {
-            typeData.type = field;
+            typeData.type = field.replace("_extends_", " extends ");
         }
         return typeData;
     }
@@ -86,7 +76,7 @@ public class TypeData {
         return ofString(classData, typeData, field);
     }
 
-    private static void extractGeneric(String generic, List<String> types) {
+    public static void extractGeneric(String generic, List<String> types) {
         boolean done;
         int startIndex = 0;
         do {
