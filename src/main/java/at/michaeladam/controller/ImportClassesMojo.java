@@ -2,11 +2,13 @@ package at.michaeladam.controller;
 
 
 import at.michaeladam.data.ProjectData;
+import at.michaeladam.parser.JavaParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -19,6 +21,19 @@ public class ImportClassesMojo extends BaseMojo {
         try {
             ProjectData projectData = getObjectMapper().readValue(outputDirectory, ProjectData.class);
             getLog().info("Found " + getClassCount(projectData) + " classes");
+
+            if(targetFolder==null) {
+                targetFolder = new File(project.getBasedir(), "src/generated");
+            }
+            if(!targetFolder.exists()) {
+                boolean mkdirs = targetFolder.mkdirs();
+                if(!mkdirs) {
+                    throw new MojoExecutionException("Could not create target directory " + targetFolder);
+                }
+            }
+            new JavaParser().parseProjectData(projectData, targetFolder);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

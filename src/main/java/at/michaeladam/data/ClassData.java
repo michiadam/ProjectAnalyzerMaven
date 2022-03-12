@@ -33,7 +33,6 @@ public class ClassData {
     protected ClassData[] childrenClasses;
 
     private String extendType;
-    private String implementsType;
     private String packageName;
 
 
@@ -81,7 +80,7 @@ public class ClassData {
 
     private void extract(CompilationUnit compilationUnit) {
         this.imports = compilationUnit.getImports()
-                .stream().map(ImportDeclaration::getNameAsString).collect(Collectors.toList()).toArray(new String[0]);
+                .stream().map(ImportDeclaration::getNameAsString).toArray(String[]::new);
         compilationUnit.getTypes().forEach(typeRaw -> {
 
         });

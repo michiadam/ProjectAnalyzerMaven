@@ -1,7 +1,5 @@
 package at.michaeladam.data;
 
-import at.michaeladam.data.serializer.TypeDataDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import lombok.Data;
 
@@ -10,12 +8,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Data
-@JsonDeserialize(using = TypeDataDeserializer.class)
 public class TypeData {
 
     private String id;
     private String type;
-    @JsonDeserialize(using = TypeDataDeserializer.class)
     private TypeData[] generic;
 
     public static TypeData of(ClassData classData, FieldDeclaration fieldDeclaration) {

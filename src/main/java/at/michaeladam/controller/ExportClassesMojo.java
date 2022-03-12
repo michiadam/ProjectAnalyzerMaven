@@ -44,8 +44,10 @@ public class ExportClassesMojo extends BaseMojo {
                         newPackagename = file.getName();
                         break;
                     case "src":
+                        newPackagename = "";
+                        break;
                     case "main":
-                        newPackagename = "src/" + file.getName();
+                        newPackagename = "";
                         break;
                     case "java":
                         newPackagename = "java/" + file.getName();

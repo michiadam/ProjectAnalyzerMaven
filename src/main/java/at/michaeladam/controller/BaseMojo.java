@@ -16,4 +16,7 @@ public abstract class BaseMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.build.directory}/classTree.json", required = true)
     protected File outputDirectory;
 
+    @Parameter(required = false)
+    protected File targetFolder;
+
 }
