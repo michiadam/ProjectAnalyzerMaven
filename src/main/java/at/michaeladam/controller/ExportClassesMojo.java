@@ -9,12 +9,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.TypeDeclaration;
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,14 +24,9 @@ import java.util.Optional;
  * @goal touch
  * @phase process-sources
  */
-@Mojo(name = "analyze", defaultPhase = LifecyclePhase.VALIDATE)
-public class AnalyzeMojo extends AbstractMojo {
+@Mojo(name = "export", defaultPhase = LifecyclePhase.VALIDATE)
+public class ExportClassesMojo extends BaseMojo {
 
-    @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    protected MavenProject project;
-
-    @Parameter(defaultValue = "${project.build.directory}/classTree.json", required = true)
-    private File outputDirectory;
 
 
     /**
@@ -146,8 +138,7 @@ public class AnalyzeMojo extends AbstractMojo {
 
     }
 
-    //TODO add Parameter for pretty print
-    private static final boolean PRETTY_PRINT = false;
+    private static final boolean PRETTY_PRINT = true;
     private ObjectMapper getObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
 

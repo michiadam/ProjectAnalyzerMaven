@@ -2,7 +2,6 @@ package at.michaeladam.data;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -35,10 +34,8 @@ public class ClassData {
 
     private String extendType;
     private String implementsType;
+    private String packageName;
 
-    public String getPackage(){
-        return id.substring(0, id.lastIndexOf("."));
-    }
 
     public static ClassData of(CompilationUnit compilationUnit, ClassOrInterfaceDeclaration classDeclaration) {
 
@@ -49,8 +46,12 @@ public class ClassData {
         classData.interfaces = classDeclaration.getImplementedTypes().stream()
                 .map(ClassOrInterfaceType::asString).toArray(String[]::new);
         classData.setType("class");
-        Optional<String> qualifiedName = classDeclaration.getFullyQualifiedName();
-        qualifiedName.ifPresent(s -> classData.id = s);
+        Optional<String> qualifiedNameOptional = classDeclaration.getFullyQualifiedName();
+        qualifiedNameOptional.ifPresent(qualifiedName -> {
+            classData.id = qualifiedName;
+            classData.packageName = qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
+
+        });
         classData.childrenClasses = classDeclaration.getMembers()
                 .stream()
                 .filter(BodyDeclaration::isClassOrInterfaceDeclaration)

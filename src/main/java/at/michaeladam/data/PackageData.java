@@ -1,17 +1,21 @@
 package at.michaeladam.data;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PackageData{
 
-    public final String packageName;
-    public final List<ClassData> classes;
+    private String packageName;
+    private List<ClassData> classes;
 
-    public final List<String> compileWarnings;
+    private List<String> compileWarnings;
 
     public PackageData(String packageName) {
         this.packageName = packageName;

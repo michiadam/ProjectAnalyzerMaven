@@ -1,15 +1,17 @@
 package at.michaeladam.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 @Data
+@AllArgsConstructor
 public class ProjectData {
 
     //List of packages
-    private final ArrayList<PackageData> packages;
+    private List<PackageData> packages;
 
     public ProjectData() {
         packages = new ArrayList<>();
@@ -19,11 +21,9 @@ public class ProjectData {
         packages.add(packageData);
     }
 
-    public PackageData getPackage(int index) {
-        return packages.get(index);
-    }
+    @JsonIgnore
     public PackageData getPackage(String packageName) {
-        return packages.stream().filter(p -> p.packageName.equals(packageName)).findFirst().orElse(null);
+        return packages.stream().filter(p -> p.getPackageName().equals(packageName)).findFirst().orElse(null);
     }
     public PackageData getOrCreatePackage(String packageName) {
         PackageData packageData = getPackage(packageName);
@@ -32,13 +32,6 @@ public class ProjectData {
             addPackage(packageData);
         }
         return packageData;
-    }
-    public int getPackageCount() {
-        return packages.size();
-    }
-    //package stream
-    public Stream<PackageData> streamPackages() {
-        return packages.stream();
     }
 
 
