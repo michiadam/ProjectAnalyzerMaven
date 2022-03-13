@@ -14,7 +14,7 @@ public class TypeData {
     private String type;
     private TypeData[] generic;
 
-    public static TypeData of(ClassData classData, FieldDeclaration fieldDeclaration) {
+    public static TypeData of(FieldHolder classData, FieldDeclaration fieldDeclaration) {
         TypeData typeData = new TypeData();
         String field = fieldDeclaration.getElementType().toString();
 
@@ -23,16 +23,17 @@ public class TypeData {
         return typeData;
     }
 
-    private static void getTypeID(ClassData classData, TypeData typeData, String field) {
+    private static void getTypeID(FieldHolder classData, TypeData typeData, String field) {
         field = field.replace(" extends ", "_extends_");
         field = field.trim();
         if (field.contains(".")) {
             typeData.id = field;
         } else {
-            if (classData.imports != null) {
+            if (classData.getImports() != null) {
+                //Deletes everything in [] and <> we should refactor this for performance reasons #TODO #Performance
                 String plainField = field.replaceAll("\\[.*?\\]", "")
                         .replaceAll("\\<.*?\\>", "");
-                Arrays.stream(classData.imports).filter(s -> s.contains(plainField)).findFirst()
+                Arrays.stream(classData.getImports()).filter(s -> s.contains(plainField)).findFirst()
                         .ifPresent(importData -> typeData.id = importData + "." + plainField);
                 if (typeData.id == null) {
                     //ignore primitive types and Strings
@@ -52,7 +53,7 @@ public class TypeData {
         }
     }
 
-    private static TypeData ofString(ClassData classData, TypeData typeData, String field) {
+    private static TypeData ofString(FieldHolder classData, TypeData typeData, String field) {
         if (field.contains("<")) {
             typeData.type = field.substring(0, field.indexOf("<"));
 
@@ -66,7 +67,7 @@ public class TypeData {
         return typeData;
     }
 
-    public static TypeData ofString(ClassData classData, String field) {
+    public static TypeData ofString(FieldHolder classData, String field) {
         TypeData typeData = new TypeData();
         getTypeID(classData, typeData, field);
         return ofString(classData, typeData, field);

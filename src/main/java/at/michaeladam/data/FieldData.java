@@ -11,7 +11,7 @@ public class FieldData {
     private TypeData type;
     private String[] modifier;
 
-    public static FieldData[] of(ClassData classData, FieldDeclaration fieldDeclaration) {
+    public static FieldData[] of(FieldHolder classData, FieldDeclaration fieldDeclaration) {
         TypeData type = TypeData.of(classData, fieldDeclaration);
         String[] modifier = fieldDeclaration
                 .getModifiers().stream()

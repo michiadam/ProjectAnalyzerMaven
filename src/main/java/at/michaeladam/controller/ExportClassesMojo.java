@@ -2,12 +2,14 @@ package at.michaeladam.controller;
 
 
 import at.michaeladam.data.ClassData;
+import at.michaeladam.data.EnumData;
 import at.michaeladam.data.PackageData;
 import at.michaeladam.data.ProjectData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -26,7 +28,6 @@ import java.util.Optional;
  */
 @Mojo(name = "export", defaultPhase = LifecyclePhase.VALIDATE)
 public class ExportClassesMojo extends BaseMojo {
-
 
 
     /**
@@ -83,20 +84,31 @@ public class ExportClassesMojo extends BaseMojo {
 
                 if (type.isClassOrInterfaceDeclaration()) {
 
-                        //add extract class to package if exists other wise add an error to package
+                    //add extract class to package if exists other wise add an error to package
 
-                        Optional<ClassData> classData = extractClass(compilationUnit, type);
-                        if (classData.isPresent()) {
-                            ClassData extractedClassData = classData.get();
-                            packageData.addClass(extractedClassData);
+                    Optional<ClassData> classData = extractClass(compilationUnit, type);
+                    if (classData.isPresent()) {
+                        ClassData extractedClassData = classData.get();
+                        packageData.addClass(extractedClassData);
 
+                    } else {
+                        packageData.addCompileWarning("Couldnt find Interface/Class " + type.getName() + " (is this a broken interface or class?)");
+                    }
+
+
+                } else if (type.isEnumDeclaration()) {
+
+                        Optional<EnumData> enumData = extractEnum(compilationUnit, type.asEnumDeclaration());
+
+                        if (enumData.isPresent()) {
+                            EnumData extractedEnumData = enumData.get();
+                            packageData.addEnum(extractedEnumData);
                         } else {
-                            packageData.addCompileWarning("Couldnt find Interface/Class " + type.getName() + " (is this a broken interface or class?)");
+                            packageData.addCompileWarning("Couldnt find Enum " + type.getName() + " (is this a broken enum?)");
                         }
-
-
+                } else {
+                    packageData.addCompileWarning("Found unknown type " + type.getName());
                 }
-                //todo implement enum
 
             });
         } catch (IOException e) {
@@ -105,13 +117,19 @@ public class ExportClassesMojo extends BaseMojo {
         }
     }
 
+    private Optional<EnumData> extractEnum(CompilationUnit compilationUnit, EnumDeclaration type) {
+        var enumData = EnumData.of(compilationUnit, type);
+
+        return Optional.of(enumData);
+
+    }
+
     private Optional<ClassData> extractClass(CompilationUnit compilationUnit, TypeDeclaration<?> type) {
 
         var classByName = compilationUnit.getClassByName(String.valueOf(type.getName()));
         if (classByName.isPresent()) {
 
             var classDeclaration = classByName.get();
-
 
 
             return Optional.of(ClassData.of(compilationUnit, classDeclaration, false));
@@ -141,10 +159,11 @@ public class ExportClassesMojo extends BaseMojo {
     }
 
     private static final boolean PRETTY_PRINT = true;
+
     private ObjectMapper getObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
 
-        if(PRETTY_PRINT) {
+        if (PRETTY_PRINT) {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
         }
 

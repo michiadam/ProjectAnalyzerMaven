@@ -12,6 +12,7 @@ import static java.util.Objects.*;
 
 public interface Parser{
 
+    String parseEnum(EnumData input);
     String parseClass(ClassData input);
     String parseField(FieldData input);
     String parseMethod(MethodData input);
@@ -23,7 +24,7 @@ public interface Parser{
 
         for (PackageData packageData : input.getPackages()) {
             String packageName = ""+packageData.getPackageName();
-            if (packageName.equals("")) {
+            if (!packageName.equals("")) {
                 String[] split = packageName.split("\\.", 3);
                 packageName = split[0] + "." + split[1] + ".generated." + split[2];
             }
@@ -36,8 +37,12 @@ public interface Parser{
 
             }
             for (ClassData classData : packageData.getClasses()) {
-                File classFile = new File(packageDirectory, classData.getSimpleName() + ".java");
+                File classFile = new File(packageDirectory, classData.getName() + ".java");
                 FileUtils.writeStringToFile(classFile, parseClass(classData), Charset.defaultCharset());
+            }
+            for(EnumData enumData : packageData.getEnums()) {
+                File classFile = new File(packageDirectory, enumData.getName() + ".java");
+                FileUtils.writeStringToFile(classFile, parseEnum(enumData), Charset.defaultCharset());
             }
 
         }

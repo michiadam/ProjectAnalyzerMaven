@@ -14,12 +14,14 @@ public class PackageData{
 
     private String packageName;
     private List<ClassData> classes;
+    private List<EnumData> enums;
 
     private List<String> compileWarnings;
 
     public PackageData(String packageName) {
         this.packageName = packageName;
         this.classes = new ArrayList<>();
+        this.enums = new ArrayList<>();
         this.compileWarnings = new ArrayList<>();
     }
 
@@ -31,5 +33,7 @@ public class PackageData{
     }
 
 
-
+    public void addEnum(EnumData enumData) {
+        enums.add(enumData);
+    }
 }

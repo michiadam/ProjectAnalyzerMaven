@@ -10,16 +10,15 @@ import lombok.Data;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Data
-public class ClassData {
+public class ClassData implements FieldHolder{
 
     protected String id;
 
-    protected String simpleName;
+    protected String name;
 
-    protected at.michaeladam.data.AnnotationData[] annotations;
+    protected AnnotationData[] annotations;
 
     protected String[] interfaces;
 
@@ -40,7 +39,7 @@ public class ClassData {
 
         ClassData classData = new ClassData();
         classData.extract(compilationUnit);
-        classData.simpleName = classDeclaration.getNameAsString();
+        classData.name = classDeclaration.getNameAsString();
         classData.annotations = AnnotationData.of(classDeclaration.getAnnotations());
         classData.interfaces = classDeclaration.getImplementedTypes().stream()
                 .map(ClassOrInterfaceType::asString).toArray(String[]::new);
