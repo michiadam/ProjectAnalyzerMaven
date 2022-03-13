@@ -3,11 +3,13 @@ package at.michaeladam.data.shared;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.javaparser.ast.comments.Comment;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 
 import java.text.MessageFormat;
 import java.util.UUID;
 
 @Data
+@Log4j2
 public abstract class SharedData {
 
     private static final String ID_PREFIX = "@GeneratorID";
@@ -30,7 +32,17 @@ public abstract class SharedData {
             String id = commentText.substring(beginIndex, commentText.indexOf("\n",beginIndex)-1);
 
             //if the id is a valid UUID, return it
+
+            try {
+
                 return UUID.fromString(id);
+            } catch (Exception e) {
+
+                UUID uuid = UUID.randomUUID();
+                log.warn("Invalid UUID in comment: " + id);
+                log.warn("Invalid UUID in comment: " + id + " - using random UUID: " + uuid);
+                return UUID.randomUUID();
+            }
 
 
         }

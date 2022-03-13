@@ -2,13 +2,12 @@ package at.michaeladam.parser;
 
 import at.michaeladam.data.ClassData;
 import at.michaeladam.data.EnumData;
+import at.michaeladam.data.shared.SharedData;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.EnumDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.comments.BlockComment;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
@@ -18,16 +17,17 @@ import com.github.javaparser.ast.stmt.ThrowStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.TypeParameter;
+import lombok.extern.log4j.Log4j2;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@Log4j2
 public class JavaParser implements Parser {
 
 
     @Override
-    public String parseEnum(EnumData input) {
+    public CompilationUnit parseEnum(EnumData input) {
         CompilationUnit cu = new CompilationUnit();
 
         String packageName = input.getPackageName();
@@ -58,11 +58,11 @@ public class JavaParser implements Parser {
 
 
         cu.addType(enumDeclaration);
-        return cu.toString();
+        return cu;
     }
 
 
-    public String parseClass(ClassData input) {
+    public CompilationUnit parseClass(ClassData input) {
 
         CompilationUnit cu = new CompilationUnit();
         String packageName = input.getPackageName();
@@ -79,17 +79,10 @@ public class JavaParser implements Parser {
 
         }
         ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration();
-        createDeclaration(input, classOrInterfaceDeclaration);
-
-
-        cu.addType(classOrInterfaceDeclaration);
-        return cu.toString();
-    }
-
-    private void createDeclaration(ClassData input, ClassOrInterfaceDeclaration classOrInterfaceDeclaration) {
         classOrInterfaceDeclaration.setInterface(input.getType().equals("interface"));
         classOrInterfaceDeclaration.setName(input.getName());
         classOrInterfaceDeclaration.setComment(new BlockComment(input.getComment()));
+        classOrInterfaceDeclaration.setModifiers(Modifier.Keyword.PUBLIC);
         classOrInterfaceDeclaration.setImplementedTypes(
                 new NodeList<>(Arrays.stream(input.getInterfaces())
                         .map(s -> new ClassOrInterfaceType().setName(s)).collect(Collectors.toList())));
@@ -106,6 +99,8 @@ public class JavaParser implements Parser {
                     MethodDeclaration methodDeclaration = new MethodDeclaration();
                     methodDeclaration.setName(method.getName());
                     methodDeclaration.setType(method.getReturnType().getTypeString());
+                    methodDeclaration.setModifiers(Arrays.stream(method.getModifier())
+                            .map(String::toUpperCase).map(Modifier.Keyword::valueOf).toArray(Modifier.Keyword[]::new));
                     methodDeclaration.setComment(new BlockComment(method.getComment()));
                     methodDeclaration.setParameters(
                             new NodeList<>(
@@ -119,7 +114,87 @@ public class JavaParser implements Parser {
 
                     classOrInterfaceDeclaration.addMember(methodDeclaration);
                 });
+
+
+        cu.addType(classOrInterfaceDeclaration);
+        return cu;
     }
+
+    @Override
+    public void parseChanges(Node oldCompilation, Node compilationUnit) {
+
+        Map<UUID, Node> oldEntries = oldCompilation.getChildNodes().stream().filter(node -> node.getComment().isPresent())
+                .filter(node -> SharedData.extractID(node.getComment().toString()) != null)
+                .collect(Collectors.toMap(node -> SharedData.extractID(node.getComment().toString()), node -> node));
+
+        Map<UUID, Node> newEntries = compilationUnit.getChildNodes().stream().filter(node -> node.getComment().isPresent())
+                .filter(node -> SharedData.extractID(node.getComment().toString()) != null)
+                .collect(Collectors.toMap(node -> SharedData.extractID(node.getComment().toString()), node -> node));
+
+        oldEntries.forEach((key, oldNode) -> {
+            if (newEntries.containsKey(key)) {
+                Node newNode = newEntries.get(key);
+                if (oldNode.getClass().equals(newNode.getClass())) {
+                    switch (oldNode.getClass().getSimpleName()) {
+                        case "ClassOrInterfaceDeclaration":
+                            ClassOrInterfaceDeclaration oldClass = (ClassOrInterfaceDeclaration) oldNode;
+                            ClassOrInterfaceDeclaration newClass = (ClassOrInterfaceDeclaration) newNode;
+                            JavaChangeHandler.handleClassOrInterfaceDeclarationChange(oldClass, newClass);
+                            parseChanges(oldClass, newClass);
+                        break;
+                        case "EnumDeclaration":
+                            EnumDeclaration oldEnum = (EnumDeclaration) oldNode;
+                            EnumDeclaration newEnum = (EnumDeclaration) newNode;
+                            JavaChangeHandler.handleEnumDeclarationChange(oldEnum, newEnum);
+                            parseChanges(oldEnum, newEnum);
+                        break;
+                        case "MethodDeclaration":
+                            MethodDeclaration oldMethod = (MethodDeclaration) oldNode;
+                            MethodDeclaration newMethod = (MethodDeclaration) newNode;
+                            JavaChangeHandler.handleMethodDeclarationChange(oldMethod, newMethod);
+                        break;
+                        case "ConstructorDeclaration":
+                            ConstructorDeclaration oldConstructor = (ConstructorDeclaration) oldNode;
+                            ConstructorDeclaration newConstructor = (ConstructorDeclaration) newNode;
+                            JavaChangeHandler.handleConstructorDeclarationChange(oldConstructor, newConstructor);
+                        break;
+                        case "FieldDeclaration":
+                            FieldDeclaration oldField = (FieldDeclaration) oldNode;
+                            FieldDeclaration newField = (FieldDeclaration) newNode;
+                            JavaChangeHandler.handleFieldDeclarationChange(oldField, newField);
+                        break;
+                        case "AnnotationDeclaration":
+                            AnnotationDeclaration oldAnnotation = (AnnotationDeclaration) oldNode;
+                            AnnotationDeclaration newAnnotation = (AnnotationDeclaration) newNode;
+                            JavaChangeHandler.handleAnnotationDeclarationChange(oldAnnotation, newAnnotation);
+                        break;
+                        default:
+                            log.warn("Unhandled node type: " + oldNode.getClass().getSimpleName());
+
+                    }
+
+                }
+
+            }
+        });
+
+    }
+
+    private boolean sharedCompare(CompilationUnit oldCompilation, CompilationUnit compilationUnit) {
+        boolean equals = Objects.equals(oldCompilation.getPackageDeclaration().orElse(null), compilationUnit.getPackageDeclaration().orElse(null));
+        return !equals;
+    }
+
+    @Override
+    public boolean compareEnums(CompilationUnit oldCompilation, CompilationUnit compilationUnit) {
+        return sharedCompare(oldCompilation, compilationUnit);
+    }
+
+    @Override
+    public boolean compareClasses(CompilationUnit oldCompilation, CompilationUnit compilationUnit) {
+        return sharedCompare(oldCompilation, compilationUnit);
+    }
+
 
     private BlockStmt getNotYetImplemented() {
         return new BlockStmt(new NodeList<>(List.of(new ThrowStmt(

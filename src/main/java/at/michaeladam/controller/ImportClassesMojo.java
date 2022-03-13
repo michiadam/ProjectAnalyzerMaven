@@ -4,6 +4,7 @@ package at.michaeladam.controller;
 import at.michaeladam.data.ProjectData;
 import at.michaeladam.parser.JavaParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -49,7 +50,7 @@ public class ImportClassesMojo extends BaseMojo {
                 .sum();
     }
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     private ObjectMapper getObjectMapper() {
         return mapper;

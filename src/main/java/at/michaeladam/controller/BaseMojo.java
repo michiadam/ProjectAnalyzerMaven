@@ -13,7 +13,7 @@ public abstract class BaseMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;
 
-    @Parameter(defaultValue = "${project.build.directory}/classTree.json", required = true)
+    @Parameter(defaultValue = "${project.build.directory}/classTree.yaml", required = true)
     protected File outputDirectory;
 
     @Parameter(required = false)
