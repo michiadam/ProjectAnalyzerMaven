@@ -1,16 +1,20 @@
 package at.michaeladam.data;
 
+import at.michaeladam.data.shared.SharedData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.nodeTypes.NodeWithName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class EnumData implements FieldHolder {
+public class EnumData extends SharedData implements FieldHolder {
 
     private EnumData() {
         enumConstants = new HashMap<>();
@@ -30,17 +34,17 @@ public class EnumData implements FieldHolder {
 
     private String packageName;
 
-    public static EnumData of(CompilationUnit compilationUnit, EnumDeclaration type) {
+    public static EnumData of(CompilationUnit compilationUnit, EnumDeclaration enumDeclaration) {
         EnumData enumData = new EnumData();
-
+        enumData.extractID(enumDeclaration.getComment().orElse(null));
         enumData.imports = compilationUnit.getImports().stream().map(NodeWithName::getNameAsString).toArray(String[]::new);
 
-        enumData.name = type.getNameAsString();
-        type.getEntries().forEach(enumConstant -> enumData.enumConstants
+        enumData.name = enumDeclaration.getNameAsString();
+        enumDeclaration.getEntries().forEach(enumConstant -> enumData.enumConstants
                 .put(enumConstant.getNameAsString(), enumConstant.getArguments().stream().map(Node::toString).toArray(String[]::new)));
 
 
-        enumData.constructors = type.getConstructors().stream()
+        enumData.constructors = enumDeclaration.getConstructors().stream()
                 .map(constructor -> MethodData.of(enumData, constructor)).toArray(MethodData[]::new);
 
         Optional<PackageDeclaration> packageDeclaration = compilationUnit.getPackageDeclaration();
@@ -48,7 +52,7 @@ public class EnumData implements FieldHolder {
         ArrayList<FieldData> fields = new ArrayList<>();
         ArrayList<MethodData> methods = new ArrayList<>();
 
-        type.getMembers().forEach(member -> {
+        enumDeclaration.getMembers().forEach(member -> {
             if (member.isFieldDeclaration()) {
 
                 fields.addAll(Arrays.asList(FieldData.of(enumData, member.asFieldDeclaration())));
@@ -62,6 +66,7 @@ public class EnumData implements FieldHolder {
         return enumData;
     }
 
+    @JsonIgnore
     public String[] getImplements() {
         return new String[0];
     }

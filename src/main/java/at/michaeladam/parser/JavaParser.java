@@ -1,10 +1,26 @@
 package at.michaeladam.parser;
 
-import at.michaeladam.data.*;
+import at.michaeladam.data.ClassData;
+import at.michaeladam.data.EnumData;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.comments.BlockComment;
+import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.ObjectCreationExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ThrowStmt;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.ast.type.TypeParameter;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class JavaParser implements Parser {
@@ -12,60 +28,43 @@ public class JavaParser implements Parser {
 
     @Override
     public String parseEnum(EnumData input) {
-        StringBuilder returnal = new StringBuilder();
+        CompilationUnit cu = new CompilationUnit();
+
         String packageName = input.getPackageName();
         if (packageName != null) {
             String[] split = packageName.split("\\.", 3);
             packageName = split[0] + "." + split[1] + ".generated." + split[2];
         }
-        returnal.append("package ").append(packageName).append(";\n\n");
-        for (String importString : input.getImports()) {
-            returnal.append("import ").append(importString).append(";\n");
+        cu.setPackageDeclaration(packageName);
+        EnumDeclaration enumDeclaration = new EnumDeclaration();
 
-        }
-        returnal.append("\n\n");
-        returnal.append(MessageFormat.format("public enum {0}{1}'{'\n",
-                input.getName(), getImplements(input)));
+        enumDeclaration.setName(input.getName());
+        enumDeclaration.setImplementedTypes(
+                new NodeList<>(Arrays.stream(input.getImplements())
+                        .map(s -> new ClassOrInterfaceType().setName(s)).collect(Collectors.toList())));
 
-        returnal.append(input.getEnumConstants().entrySet().stream()
-                .map(stringEntry -> ("\t" + stringEntry.getKey() + "(" + String.join(", ", stringEntry.getValue()) + ")"))
-                .collect(Collectors.joining(",\n"))).append(";\n");
-
-        returnal.append("\n");
-        returnal.append(Arrays.stream(input.getFields()).map(this::parseField).map(s -> "\t" + s).collect(Collectors.joining("\n")));
-        returnal.append("\n\n");
-
-        returnal.append(Arrays.stream(input.getConstructors())
-                .map(methodData -> parseConstructor(input.getName(), methodData))
-                .collect(Collectors.joining("\n\n")));
+        input.getEnumConstants().forEach((key, value) -> enumDeclaration.addEnumConstant(key).setArguments(
+                new NodeList<>(Arrays.stream(value).map(s -> new NameExpr().setName(s)).collect(Collectors.toList()))));
 
 
-        return returnal.toString() + "}";
+        List.of(input.getConstructors()).forEach(constructor -> enumDeclaration.addConstructor().setBody(getNotYetImplemented()).setParameters(
+                new NodeList<>(constructor.getParameter().entrySet().stream().map(entry -> {
+                    Parameter parameter = new Parameter();
+                    parameter.setName(entry.getKey());
+                    parameter.setType(new ClassOrInterfaceType().setName(entry.getValue().getTypeString()));
+                    return parameter;
+                }).collect(Collectors.toList()))).setComment(new BlockComment().setContent(constructor.getComment()))
+        );
+
+
+        cu.addType(enumDeclaration);
+        return cu.toString();
     }
 
-    private String parseConstructor(String name, MethodData methodData) {
-
-        String returnal = MessageFormat.format("\t{0} {1}({2})'{'",
-                String.join(" ", methodData.getModifier()), name,
-                methodData
-                        .getParameter()
-                        .entrySet()
-                        .stream()
-                        .map(stringEntry -> String.join(" ", parseType(stringEntry.getValue()), stringEntry.getKey()))
-                        .collect(Collectors.joining(", "))) +
-                "\n\n" +
-                methodData
-                        .getParameter()
-                        .keySet()
-                        .stream()
-                        .map(fieldName -> "\t\tthis." + fieldName + " = " + fieldName + ";")
-                        .collect(Collectors.joining("\n"));
-
-        return returnal + "\n\n\t}\n";
-    }
 
     public String parseClass(ClassData input) {
-        StringBuilder returnal = new StringBuilder();
+
+        CompilationUnit cu = new CompilationUnit();
         String packageName = input.getPackageName();
         //insert .generated. after the second dot
         if (packageName != null) {
@@ -73,89 +72,62 @@ public class JavaParser implements Parser {
             packageName = split[0] + "." + split[1] + ".generated." + split[2];
         }
 
-        returnal.append("package ").append(packageName).append(";\n\n");
+        cu.setPackageDeclaration(packageName);
+
         for (String importString : input.getImports()) {
-            returnal.append("import ").append(importString).append(";\n");
+            cu.addImport(importString);
 
         }
-        returnal.append("\n\n");
-        returnal.append(MessageFormat.format("public abstract {0} {1}{2}{3}'{'\n", input.getType(), input.getName(), getExtends(input), getImplements(input)));
-        for (FieldData field : input.getFields()) {
-            returnal.append("\t").append(parseField(field)).append("\n");
-
-        }
-        for (MethodData method : input.getMethods()) {
-            String methodString = (parseMethod(method));
-            //pad every line with a tab
-            returnal.append("\t").append(methodString.replace("\n", "\n\t")).append("\n\n");
-        }
+        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration();
+        createDeclaration(input, classOrInterfaceDeclaration);
 
 
-        return returnal.toString() + "}";
+        cu.addType(classOrInterfaceDeclaration);
+        return cu.toString();
     }
 
-    @Override
-    public String parseField(FieldData input) {
-        return String.join(" ", String.join(" ", input.getModifier()), parseType(input.getType()), input.getName()) + ";";
+    private void createDeclaration(ClassData input, ClassOrInterfaceDeclaration classOrInterfaceDeclaration) {
+        classOrInterfaceDeclaration.setInterface(input.getType().equals("interface"));
+        classOrInterfaceDeclaration.setName(input.getName());
+        classOrInterfaceDeclaration.setComment(new BlockComment(input.getComment()));
+        classOrInterfaceDeclaration.setImplementedTypes(
+                new NodeList<>(Arrays.stream(input.getInterfaces())
+                        .map(s -> new ClassOrInterfaceType().setName(s)).collect(Collectors.toList())));
+
+        Arrays.stream(input.getFields())
+                .forEach(field -> classOrInterfaceDeclaration.addField(field.getType().getTypeString(),
+                        field.getName(), Arrays.stream(field.getModifier())
+                                .map(String::toUpperCase)
+                                .map(Modifier.Keyword::valueOf).toArray(Modifier.Keyword[]::new)).setComment(new BlockComment(field.getComment())));
+
+
+        Arrays.stream(input.getMethods())
+                .forEach(method -> {
+                    MethodDeclaration methodDeclaration = new MethodDeclaration();
+                    methodDeclaration.setName(method.getName());
+                    methodDeclaration.setType(method.getReturnType().getTypeString());
+                    methodDeclaration.setComment(new BlockComment(method.getComment()));
+                    methodDeclaration.setParameters(
+                            new NodeList<>(
+                                    method.getParameter().entrySet().stream().map(stringEntry -> {
+                                        Type type = new TypeParameter(stringEntry.getValue().getTypeString());
+
+                                        return new Parameter(type, stringEntry.getKey());
+                                    }).collect(Collectors.toList())));
+
+                    methodDeclaration.setBody(getNotYetImplemented());
+
+                    classOrInterfaceDeclaration.addMember(methodDeclaration);
+                });
     }
 
-    private String parseType(TypeData type) {
-        String returnal = "";
-        if (type == null) {
-            return returnal;
-        }
-        if (type.getType() != null) {
-            returnal = type.getType();
-
-            if (type.getGeneric() != null) {
-                returnal += "<" + Arrays.stream(type.getGeneric()).filter(Objects::nonNull).map(this::parseType).collect(Collectors.joining(", ")) + ">";
-            }
-        }
-        return returnal;
+    private BlockStmt getNotYetImplemented() {
+        return new BlockStmt(new NodeList<>(List.of(new ThrowStmt(
+                new ObjectCreationExpr()
+                        .setType("java.lang.RuntimeException")
+                        .setArguments(new NodeList<>(List.of(new StringLiteralExpr("Not yet implemented"))))
+        ))));
     }
 
-    @Override
-    public String parseMethod(MethodData input) {
-        String returnal = "/** Auto generated code, any changes will be lost.";
-        String[] modifier = input.getModifier();
-        if (Arrays.asList(modifier).contains("private")) {
-            returnal += "\n\t* converted private to protected consider changing the modifier";
-            modifier = Arrays.stream(input.getModifier()).map(s -> Objects.equals(s, "private") ? "protected" : s).toArray(String[]::new);
-        }
-        if (Arrays.asList(modifier).contains("abstract")) {
-            returnal += "\n\t* removed abstract from modifiers, all generated methods are abstract";
-            modifier = Arrays.stream(input.getModifier()).filter(s -> !Objects.equals(s, "abstract")).toArray(String[]::new);
-        }
-        return returnal + "*/\n" +
-                MessageFormat.format("{0} abstract {1} {2} ({3});",
-                        String.join(" ", modifier),
-                        parseType(input.getReturnType()),
-                        input.getName(),
-                        input.getParameter().entrySet().stream().map(s ->
-                                parseType(s.getValue()) + " " + s.getKey()
-                        ).collect(Collectors.joining(", ")));
 
-
-    }
-
-    private String getExtends(ClassData input) {
-        if (input.getExtendType() != null) {
-            return "extends " + input.getExtendType() + " ";
-        }
-        return "";
-    }
-
-    private String getImplements(ClassData input) {
-        if (input.getInterfaces() != null && input.getInterfaces().length > 0) {
-            return " implements " + String.join(", ", input.getInterfaces());
-
-        }
-        return "";
-    }
-
-    private String getImplements(EnumData input) {
-        if (input.getImplements().length > 0)
-            return " implements " + String.join(", ", input.getImplements());
-        return "";
-    }
 }

@@ -1,18 +1,25 @@
 package at.michaeladam.data;
 
+import at.michaeladam.data.shared.SharedData;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class ClassData implements FieldHolder{
+public class ClassData extends SharedData implements FieldHolder{
+
+    protected UUID generatedId;
 
     protected String id;
 
@@ -39,6 +46,7 @@ public class ClassData implements FieldHolder{
 
         ClassData classData = new ClassData();
         classData.extract(compilationUnit);
+        classData.extractID(classDeclaration.getComment().orElse(null));
         classData.name = classDeclaration.getNameAsString();
         classData.annotations = AnnotationData.of(classDeclaration.getAnnotations());
         classData.interfaces = classDeclaration.getImplementedTypes().stream()

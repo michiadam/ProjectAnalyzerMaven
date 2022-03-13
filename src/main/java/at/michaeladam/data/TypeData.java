@@ -1,5 +1,6 @@
 package at.michaeladam.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import lombok.Data;
 
@@ -21,6 +22,13 @@ public class TypeData {
         ofString(classData, typeData, field);
         getTypeID(classData, typeData, field);
         return typeData;
+    }
+    @JsonIgnore
+    public String getTypeString() {
+        if(generic == null) {
+            return type;
+        }
+        return type+"<"+Arrays.stream(generic).map(TypeData::getTypeString).reduce((a,b)->a+","+b).orElse("")+">";
     }
 
     private static void getTypeID(FieldHolder classData, TypeData typeData, String field) {

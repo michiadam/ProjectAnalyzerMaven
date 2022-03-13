@@ -14,8 +14,6 @@ public interface Parser{
 
     String parseEnum(EnumData input);
     String parseClass(ClassData input);
-    String parseField(FieldData input);
-    String parseMethod(MethodData input);
 
     default void parseProjectData(ProjectData input, String destination) throws IOException {
         parseProjectData(input, new File(destination));

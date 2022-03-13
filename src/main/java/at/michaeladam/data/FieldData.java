@@ -1,11 +1,15 @@
 package at.michaeladam.data;
 
+import at.michaeladam.data.shared.SharedData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class FieldData {
+public class FieldData extends SharedData {
 
     private String name;
     private TypeData type;
@@ -22,6 +26,7 @@ public class FieldData {
             fieldData.setName(variable.getNameAsString());
             fieldData.setType(type);
             fieldData.setModifier(modifier);
+            fieldData.extractID(fieldDeclaration.getComment().orElse(null));
             return fieldData;
         }).toArray(FieldData[]::new);
 

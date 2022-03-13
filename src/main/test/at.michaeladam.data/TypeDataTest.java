@@ -40,4 +40,16 @@ class TypeDataTest {
         Assertions.assertNotNull(extractedType.getGeneric());
         Assertions.assertEquals(26, extractedType.getGeneric().length);
     }
+    @Test
+    void TestGetString() {
+        String field = "Generic<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R, S,T,U,V,W,X,Y,Z>";
+        TypeData extractedType = TypeData.ofString(new FieldHolder() {
+            @Override
+            public String[] getImports() {
+                return new String[0];
+            }
+        }, field);
+        System.out.println(field+" -> "+extractedType.getTypeString());
+        Assertions.assertEquals(field, extractedType.getTypeString());
+    }
 }
