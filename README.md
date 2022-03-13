@@ -10,7 +10,7 @@ This java maven project can generate source code from JSON-Files and create thes
 
 ## Usage/Examples
 
-```java
+```
 mvn at.michaeladam:projectAnalyzer:1.0:import #Generates SourceCode
 mvn at.michaeladam:projectAnalyzer:1.0:export #Generates JsonFile
 ```
