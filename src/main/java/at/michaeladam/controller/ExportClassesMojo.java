@@ -7,6 +7,7 @@ import at.michaeladam.data.PackageData;
 import at.michaeladam.data.ProjectData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.EnumDeclaration;
@@ -161,7 +162,7 @@ public class ExportClassesMojo extends BaseMojo {
     private static final boolean PRETTY_PRINT = true;
 
     private ObjectMapper getObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
         if (PRETTY_PRINT) {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);

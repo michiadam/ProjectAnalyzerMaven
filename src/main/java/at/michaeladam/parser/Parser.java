@@ -1,19 +1,19 @@
 package at.michaeladam.parser;
 
 import at.michaeladam.data.*;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-
-import static java.util.Objects.*;
 
 public interface Parser{
 
-    String parseEnum(EnumData input);
-    String parseClass(ClassData input);
+    CompilationUnit parseEnum(EnumData input);
+    CompilationUnit parseClass(ClassData input);
 
     default void parseProjectData(ProjectData input, String destination) throws IOException {
         parseProjectData(input, new File(destination));
@@ -29,20 +29,67 @@ public interface Parser{
 
             File packageDirectory = new File(destination, packageName.replace(".", "/"));
 
-            boolean mkdirs = packageDirectory.mkdirs();
-            if (!mkdirs && packageDirectory.listFiles()!= null) {
-                    Arrays.stream(requireNonNull(packageDirectory.listFiles())).forEach(File::delete);
-
-            }
+            packageDirectory.mkdirs(); 
+            
             for (ClassData classData : packageData.getClasses()) {
-                File classFile = new File(packageDirectory, classData.getName() + ".java");
-                FileUtils.writeStringToFile(classFile, parseClass(classData), Charset.defaultCharset());
+                handleClassOrInterface(packageDirectory, classData);
             }
             for(EnumData enumData : packageData.getEnums()) {
-                File classFile = new File(packageDirectory, enumData.getName() + ".java");
-                FileUtils.writeStringToFile(classFile, parseEnum(enumData), Charset.defaultCharset());
+                handleEnum(packageDirectory, enumData);
             }
 
         }
     }
+
+    private void handleClassOrInterface(File packageDirectory, ClassData classData) throws IOException {
+        File classFile = new File(packageDirectory, classData.getName() + ".java");
+
+
+        CompilationUnit oldCompilation = null;
+        CompilationUnit compilationUnit = parseClass(classData);
+
+        if(classFile.exists()){
+            oldCompilation = new JavaParser().parse(classFile).getResult().orElse(null);
+        }
+
+        if(oldCompilation == null) {
+            FileUtils.writeStringToFile(classFile, compilationUnit.toString(), Charset.defaultCharset());
+            return;
+        }
+
+
+        if(compareEnums(oldCompilation, compilationUnit)) {
+            //todo implement to optimise
+        }
+        parseChanges(oldCompilation, compilationUnit);
+        FileUtils.writeStringToFile(classFile, oldCompilation.toString(), Charset.defaultCharset());
+    }
+
+    private void handleEnum(File packageDirectory, EnumData enumData) throws IOException {
+        File classFile = new File(packageDirectory, enumData.getName() + ".java");
+
+        CompilationUnit compilationUnit = parseEnum(enumData);
+        CompilationUnit oldCompilation = null;
+
+        if(classFile.exists()){
+            oldCompilation = new JavaParser().parse(classFile).getResult().orElse(null);
+        }
+
+        if(oldCompilation == null) {
+            FileUtils.writeStringToFile(classFile, compilationUnit.toString(), Charset.defaultCharset());
+            return;
+        }
+
+        if(compareClasses(oldCompilation, compilationUnit)) {
+            //todo implement to optimise
+        }
+        parseChanges(oldCompilation, compilationUnit);
+        FileUtils.writeStringToFile(classFile, oldCompilation.toString(), Charset.defaultCharset());
+    }
+
+    void parseChanges(Node oldCompilation, Node compilationUnit);
+
+    boolean compareEnums(CompilationUnit oldCompilation, CompilationUnit compilationUnit);
+
+    boolean compareClasses(CompilationUnit oldCompilation, CompilationUnit compilationUnit);
 }
