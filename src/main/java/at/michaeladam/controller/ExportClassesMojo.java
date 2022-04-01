@@ -99,14 +99,14 @@ public class ExportClassesMojo extends BaseMojo {
 
                 } else if (type.isEnumDeclaration()) {
 
-                        Optional<EnumData> enumData = extractEnum(compilationUnit, type.asEnumDeclaration());
+                    Optional<EnumData> enumData = extractEnum(compilationUnit, type.asEnumDeclaration());
 
-                        if (enumData.isPresent()) {
-                            EnumData extractedEnumData = enumData.get();
-                            packageData.addEnum(extractedEnumData);
-                        } else {
-                            packageData.addCompileWarning("Couldnt find Enum " + type.getName() + " (is this a broken enum?)");
-                        }
+                    if (enumData.isPresent()) {
+                        EnumData extractedEnumData = enumData.get();
+                        packageData.addEnum(extractedEnumData);
+                    } else {
+                        packageData.addCompileWarning("Couldnt find Enum " + type.getName() + " (is this a broken enum?)");
+                    }
                 } else {
                     packageData.addCompileWarning("Found unknown type " + type.getName());
                 }
@@ -146,15 +146,23 @@ public class ExportClassesMojo extends BaseMojo {
 
     public void execute() throws MojoExecutionException {
 
-        ProjectData tree = new ProjectData();
 
-        buildTree(tree, "", project.getBasedir());
 
-        try {
-            getObjectMapper().writeValue(outputDirectory, tree);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mavenSession.getAllProjects()
+                .parallelStream()
+                .forEach(project -> {
+                    getLog().info("Parsing project " + project.getArtifactId());
+                    ProjectData tree = new ProjectData();
+                    buildTree(tree, "", new File( project.getBasedir(),"src"));
+                    try {
+                        getObjectMapper().writeValue(getTargetFolder(project), tree);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+
+
 
 
     }

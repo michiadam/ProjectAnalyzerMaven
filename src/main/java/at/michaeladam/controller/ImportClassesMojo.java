@@ -18,27 +18,28 @@ public class ImportClassesMojo extends BaseMojo {
 
 
     public void execute() throws MojoExecutionException {
-        getLog().info("Importing classes from " + outputDirectory);
-        try {
-            ProjectData projectData = getObjectMapper().readValue(outputDirectory, ProjectData.class);
-            getLog().info("Found " + getClassCount(projectData) + " classes");
 
-            if(targetFolder==null) {
-                targetFolder = new File(project.getBasedir(), "src/generated");
-            }
-            if(!targetFolder.exists()) {
-                boolean mkdirs = targetFolder.mkdirs();
-                if(!mkdirs) {
-                    throw new MojoExecutionException("Could not create target directory " + targetFolder);
+        mavenSession.getAllProjects().parallelStream().forEach(project -> {
+
+            File structureInput = getTargetFolder(project);
+            getLog().info("Importing classes from " + structureInput);
+            try {
+                ProjectData projectData = getObjectMapper().readValue(structureInput, ProjectData.class);
+                getLog().info("Found " + getClassCount(projectData) + " classes");
+
+                File targetFolder = new File(project.getBasedir(), "src/generated");
+
+                if (!targetFolder.exists()) {
+                    boolean mkdirs = targetFolder.mkdirs();
+                    if (!mkdirs) {
+                        throw new RuntimeException("Could not create target directory " + targetFolder);
+                    }
                 }
+                new JavaParser().parseProjectData(projectData, targetFolder);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            new JavaParser().parseProjectData(projectData, targetFolder);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        });
 
     }
 
