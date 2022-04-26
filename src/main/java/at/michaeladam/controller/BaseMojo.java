@@ -15,6 +15,12 @@ public abstract class BaseMojo extends AbstractMojo {
     @Parameter( defaultValue = "${session}", readonly = true )
     protected MavenSession mavenSession;
 
+    @Parameter( defaultValue = "${project}", readonly = true )
+    protected MavenProject project;
+
+    @Parameter( property = "your-plugin.customProperty", defaultValue = "custom" )
+    private String customProperty;
+
 
     public File getTargetFolder(MavenProject module) {
         File umlDirectory = new File(module.getBasedir(),"packuml");

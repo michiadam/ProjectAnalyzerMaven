@@ -60,7 +60,9 @@ public abstract class SharedData {
             case "FieldData":
                 return MessageFormat.format("\n\t\t{0} {1}\n\t\tGenerated field, all changes will be lost!\n\t", ID_PREFIX, this.generatorId);
             case "EnumData":
-                return MessageFormat.format("\n\t\t{0} {1}\n\t\tGenerated enum, all changes will be lost!\n\t", ID_PREFIX, this.generatorId);
+                return MessageFormat.format("\n\t{0} {1}\n\tGenerated enum, any changes will be lost!\n", ID_PREFIX, this.generatorId);
+            case "EnumConstantData":
+                return MessageFormat.format("\n\t\t{0} {1}\n\t\tGenerated enum constant, all changes will be lost!\n\t", ID_PREFIX, this.generatorId);
             default:
                 return MessageFormat.format("\n\t{0} {1}\n\tGenerated {2}(?), any changes might be lost!\n\t", ID_PREFIX, this.generatorId, this.getClass().getSimpleName());
 

@@ -11,20 +11,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class EnumData extends SharedData implements FieldHolder {
 
-    private EnumData() {
-        enumConstants = new HashMap<>();
-    }
 
 
     private String[] imports;
     private String name;
 
-    private Map<String, String[]> enumConstants;
+    private List<EnumConstantData> enumConstants;
 
     private FieldData[] fields;
 
@@ -40,9 +38,8 @@ public class EnumData extends SharedData implements FieldHolder {
         enumData.imports = compilationUnit.getImports().stream().map(NodeWithName::getNameAsString).toArray(String[]::new);
 
         enumData.name = enumDeclaration.getNameAsString();
-        enumDeclaration.getEntries().forEach(enumConstant -> enumData.enumConstants
-                .put(enumConstant.getNameAsString(), enumConstant.getArguments().stream().map(Node::toString).toArray(String[]::new)));
 
+        enumData.enumConstants = enumDeclaration.getEntries().stream().map(EnumConstantData::of).collect(Collectors.toList());
 
         enumData.constructors = enumDeclaration.getConstructors().stream()
                 .map(constructor -> MethodData.of(enumData, constructor)).toArray(MethodData[]::new);

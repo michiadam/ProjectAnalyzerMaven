@@ -19,7 +19,6 @@ public class ImportClassesMojo extends BaseMojo {
 
     public void execute() throws MojoExecutionException {
 
-        mavenSession.getAllProjects().parallelStream().forEach(project -> {
 
             File structureInput = getTargetFolder(project);
             getLog().info("Importing classes from " + structureInput);
@@ -39,7 +38,6 @@ public class ImportClassesMojo extends BaseMojo {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
 
     }
 

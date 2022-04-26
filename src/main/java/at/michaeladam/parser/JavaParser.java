@@ -2,6 +2,7 @@ package at.michaeladam.parser;
 
 import at.michaeladam.data.ClassData;
 import at.michaeladam.data.EnumData;
+import at.michaeladam.data.MethodData;
 import at.michaeladam.data.shared.SharedData;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
@@ -39,12 +40,25 @@ public class JavaParser implements Parser {
         EnumDeclaration enumDeclaration = new EnumDeclaration();
 
         enumDeclaration.setName(input.getName());
+        enumDeclaration.setComment(new BlockComment(input.getComment()));
         enumDeclaration.setImplementedTypes(
                 new NodeList<>(Arrays.stream(input.getImplements())
                         .map(s -> new ClassOrInterfaceType().setName(s)).collect(Collectors.toList())));
 
-        input.getEnumConstants().forEach((key, value) -> enumDeclaration.addEnumConstant(key).setArguments(
-                new NodeList<>(Arrays.stream(value).map(s -> new NameExpr().setName(s)).collect(Collectors.toList()))));
+
+        Arrays.stream(input.getFields())
+                .forEach(field -> enumDeclaration.addField(field.getType().getTypeString(),
+                        field.getName(), Arrays.stream(field.getModifier())
+                                .map(String::toUpperCase)
+                                .map(Modifier.Keyword::valueOf).toArray(Modifier.Keyword[]::new)).setComment(new BlockComment(field.getComment())));
+
+
+        input.getEnumConstants().forEach(enumConstant -> enumDeclaration.addEnumConstant(enumConstant.getName())
+                .setArguments(new NodeList<>(
+                        Arrays.stream(enumConstant.getArguments())
+                                .map(NameExpr::new)
+                                .collect(Collectors.toList())))
+                .setComment(new BlockComment(enumConstant.getComment())));
 
 
         List.of(input.getConstructors()).forEach(constructor -> enumDeclaration.addConstructor().setBody(getNotYetImplemented()).setParameters(
@@ -105,7 +119,7 @@ public class JavaParser implements Parser {
                     methodDeclaration.setParameters(
                             new NodeList<>(
                                     method.getParameter().entrySet().stream().map(stringEntry -> {
-                                        Type type = new TypeParameter(stringEntry.getValue().getTypeString());
+                                        Type type = new TypeParameter(stringEntry.getValue().getType());
 
                                         return new Parameter(type, stringEntry.getKey());
                                     }).collect(Collectors.toList())));
@@ -131,6 +145,10 @@ public class JavaParser implements Parser {
                 .filter(node -> SharedData.extractID(node.getComment().toString()) != null)
                 .collect(Collectors.toMap(node -> SharedData.extractID(node.getComment().toString()), node -> node));
 
+        if(oldEntries.size() != newEntries.size()){
+            System.out.println("Different number of entries");
+        }
+
         oldEntries.forEach((key, oldNode) -> {
             if (newEntries.containsKey(key)) {
                 Node newNode = newEntries.get(key);
@@ -141,33 +159,38 @@ public class JavaParser implements Parser {
                             ClassOrInterfaceDeclaration newClass = (ClassOrInterfaceDeclaration) newNode;
                             JavaChangeHandler.handleClassOrInterfaceDeclarationChange(oldClass, newClass);
                             parseChanges(oldClass, newClass);
-                        break;
+                            break;
                         case "EnumDeclaration":
                             EnumDeclaration oldEnum = (EnumDeclaration) oldNode;
                             EnumDeclaration newEnum = (EnumDeclaration) newNode;
                             JavaChangeHandler.handleEnumDeclarationChange(oldEnum, newEnum);
                             parseChanges(oldEnum, newEnum);
-                        break;
+                            break;
                         case "MethodDeclaration":
                             MethodDeclaration oldMethod = (MethodDeclaration) oldNode;
                             MethodDeclaration newMethod = (MethodDeclaration) newNode;
                             JavaChangeHandler.handleMethodDeclarationChange(oldMethod, newMethod);
-                        break;
+                            break;
                         case "ConstructorDeclaration":
                             ConstructorDeclaration oldConstructor = (ConstructorDeclaration) oldNode;
                             ConstructorDeclaration newConstructor = (ConstructorDeclaration) newNode;
                             JavaChangeHandler.handleConstructorDeclarationChange(oldConstructor, newConstructor);
-                        break;
+                            break;
                         case "FieldDeclaration":
                             FieldDeclaration oldField = (FieldDeclaration) oldNode;
                             FieldDeclaration newField = (FieldDeclaration) newNode;
                             JavaChangeHandler.handleFieldDeclarationChange(oldField, newField);
-                        break;
+                            break;
                         case "AnnotationDeclaration":
                             AnnotationDeclaration oldAnnotation = (AnnotationDeclaration) oldNode;
                             AnnotationDeclaration newAnnotation = (AnnotationDeclaration) newNode;
                             JavaChangeHandler.handleAnnotationDeclarationChange(oldAnnotation, newAnnotation);
-                        break;
+                            break;
+                        case "EnumConstantDeclaration":
+                            EnumConstantDeclaration oldEnumConstant = (EnumConstantDeclaration) oldNode;
+                            EnumConstantDeclaration newEnumConstant = (EnumConstantDeclaration) newNode;
+                            JavaChangeHandler.handleEnumConstantDeclarationChange(oldEnumConstant, newEnumConstant);
+                            break;
                         default:
                             log.warn("Unhandled node type: " + oldNode.getClass().getSimpleName());
 

@@ -63,7 +63,12 @@ public class JavaChangeHandler {
             oldEnum.setAnnotations(newEnum.getAnnotations());
 
         }
-        if (!oldEnum.getEntries().equals(newEnum.getEntries())) {
+        if(!JavaChangeHandlerHelper.areConstructorsEqual(oldEnum.getConstructors(), newEnum.getConstructors())) {
+            log.info("Enum constructors changed from " + oldEnum.getConstructors() + " to " + newEnum.getConstructors());
+            oldEnum.getConstructors().clear();
+            oldEnum.getConstructors().addAll(newEnum.getConstructors());
+        }
+        if(!JavaChangeHandlerHelper.areEnumConstantsEqual(oldEnum.getEntries(), newEnum.getEntries())) {
             log.info("Enum entries changed from " + oldEnum.getEntries() + " to " + newEnum.getEntries());
             oldEnum.setEntries(newEnum.getEntries());
         }
@@ -98,7 +103,7 @@ public class JavaChangeHandler {
             log.info("Constructor annotations changed from " + oldConstructor.getAnnotations() + " to " + newConstructor.getAnnotations());
             oldConstructor.setAnnotations(newConstructor.getAnnotations());
         }
-        if(!oldConstructor.getParameters().equals(newConstructor.getParameters())) {
+        if(!JavaChangeHandlerHelper.areParametersEqual(oldConstructor.getParameters(), newConstructor.getParameters())){
             log.info("Constructor parameters changed from " + oldConstructor.getParameters() + " to " + newConstructor.getParameters());
             oldConstructor.setParameters(newConstructor.getParameters());
         }
@@ -127,5 +132,18 @@ public class JavaChangeHandler {
 
     public static void handleAnnotationDeclarationChange(AnnotationDeclaration oldAnnotation, AnnotationDeclaration newAnnotation) {
         // TODO implement me
+    }
+
+    public static void handleEnumConstantDeclarationChange(EnumConstantDeclaration oldEnumConstant, EnumConstantDeclaration newEnumConstant) {
+
+        if(!oldEnumConstant.getNameAsString().equals(newEnumConstant.getNameAsString())) {
+            log.info("Enum constant name changed from " + oldEnumConstant.getNameAsString() + " to " + newEnumConstant.getNameAsString());
+        }
+        if(!JavaChangeHandlerHelper.areAnnotationsEqual(oldEnumConstant.getAnnotations(), newEnumConstant.getAnnotations())) {
+            log.info("Enum constant annotations changed from " + oldEnumConstant.getAnnotations() + " to " + newEnumConstant.getAnnotations());
+        }
+        if(!JavaChangeHandlerHelper.areArgumentsEqual(oldEnumConstant.getArguments(), newEnumConstant.getArguments())) {
+            log.info("Enum constant arguments changed from " + oldEnumConstant.getArguments() + " to " + newEnumConstant.getArguments());
+        }
     }
 }

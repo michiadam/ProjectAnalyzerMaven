@@ -147,22 +147,14 @@ public class ExportClassesMojo extends BaseMojo {
     public void execute() throws MojoExecutionException {
 
 
-
-        mavenSession.getAllProjects()
-                .parallelStream()
-                .forEach(project -> {
-                    getLog().info("Parsing project " + project.getArtifactId());
-                    ProjectData tree = new ProjectData();
-                    buildTree(tree, "", new File( project.getBasedir(),"src"));
-                    try {
-                        getObjectMapper().writeValue(getTargetFolder(project), tree);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-
-
-
+        getLog().info("Parsing project " + project.getArtifactId());
+        ProjectData tree = new ProjectData();
+        buildTree(tree, "", new File(project.getBasedir(), "src"));
+        try {
+            getObjectMapper().writeValue(getTargetFolder(project), tree);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
